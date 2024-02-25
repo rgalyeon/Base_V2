@@ -1,0 +1,936 @@
+import asyncio
+
+from modules import *
+
+
+async def bridge_base(wallet_info):
+    """
+    Deposit from official bridge
+    ______________________________________________________
+    all_amount - bridge from min_percent to max_percent
+    """
+
+    min_amount = 0.001
+    max_amount = 0.002
+    decimal = 4
+
+    all_amount = True
+
+    min_percent = 1
+    max_percent = 1
+
+    check_balance_on_dest = False
+    check_amount = 0.005
+    save_funds = [0.0011, 0.0013]
+    min_required_amount = 0
+
+    base_inst = Base(wallet_info)
+    await base_inst.deposit(
+        min_amount, max_amount, decimal, all_amount, min_percent, max_percent,
+        save_funds, check_balance_on_dest, check_amount, min_required_amount
+    )
+
+
+async def withdraw_okx(wallet_info):
+    """
+    Withdraw ETH from OKX
+    ______________________________________________________
+    min_amount - min amount (ETH)
+    max_amount - max_amount (ETH)
+    chains - ['zksync', 'arbitrum', 'linea', 'base', 'optimism']
+    terminate - if True - terminate program if money is not withdrawn
+    skip_enabled - If True, the skip_threshold check will be applied; otherwise, it will be ignored
+    skip_threshold - If skip_enabled is True and the wallet balance is greater than or equal to this threshold,
+                     skip the withdrawal
+    """
+    token = 'ETH'
+    chains = ['arbitrum', 'zksync', 'linea', 'base', 'optimism']
+
+    min_amount = 0.0070
+    max_amount = 0.0072
+
+    terminate = False
+
+    skip_enabled = False
+    skip_threshold = 0.00327
+
+    wait_unlimited_time = False
+    sleep_between_attempts = [10, 20]  # min, max
+
+    okx_exchange = Okx(wallet_info, chains)
+    await okx_exchange.okx_withdraw(
+        min_amount, max_amount, token, terminate, skip_enabled, skip_threshold,
+        wait_unlimited_time, sleep_between_attempts
+    )
+
+
+async def transfer_to_okx(wallet_info):
+    from_chains = ["optimism", "arbitrum", "base"]
+
+    min_amount = 0.0012
+    max_amount = 0.0012
+    decimal = 4
+
+    all_amount = True
+
+    min_percent = 100
+    max_percent = 100
+
+    save_funds = [0.0001, 0.00012]
+    min_required_amount = 0.002
+
+    bridge_from_all_chains = True
+    sleep_between_transfers = [120, 350]
+
+    transfer_inst = Transfer(wallet_info)
+    await transfer_inst.transfer_eth(
+        from_chains, min_amount, max_amount, decimal, all_amount, min_percent,
+        max_percent, save_funds, False, 0, min_required_amount,
+        bridge_from_all_chains=bridge_from_all_chains,
+        sleep_between_transfers=sleep_between_transfers
+    )
+
+
+async def bridge_orbiter(wallet_info):
+    """
+    Bridge from orbiter
+    ______________________________________________________
+    from_chains – source chain - ethereum, polygon_zkevm, arbitrum, optimism, zksync | Select one or more
+                  If more than one chain is specified, the software will check the balance in each network and
+                  select the chain with the highest balance.
+    to_chain – destination chain - ethereum, polygon_zkevm, arbitrum, optimism, zksync | Select one
+
+    min_amount - the minimum possible amount for sending
+    max_amount - maximum possible amount to send
+    decimal - to which digit to round the amount to be sent
+
+    all_amount - if True, percentage values will be used for sending (min_percent, max_percent
+                 instead of min_amount, max_amount).
+
+    min_percent - the minimum possible percentage of the balance to be sent
+    max_percent - the maximum possible percentage of the balance to send
+
+    check_balance_on_dest - if True, it will check the balance in the destination network.
+    check_amount - amount to check the balance in the destination network. if the balance is greater than this amount,
+                   the bridge will not be executed.
+    save_funds - what amount to leave in the outgoing network [min, max], chosen randomly from the range
+    min_required_amount - the minimum required balance in the network to make the bridge.
+                          if there is no network with the required balance, the bridge will not be made
+    bridge_from_all_chains - if True, will be produced from all chains specified in the parameter from_chains
+    sleep_between_transfers - only if bridge_from_all_chains=True. sleep between few transfers
+    """
+
+    from_chains = ["arbitrum", "optimism", "base", "linea"]
+    to_chain = "scroll"
+
+    min_amount = 0.005
+    max_amount = 0.0051
+    decimal = 6
+
+    all_amount = True
+
+    min_percent = 98
+    max_percent = 100
+
+    check_balance_on_dest = True
+    check_amount = 0.005
+    save_funds = [0.0011, 0.0013]
+    min_required_amount = 0.005
+
+    bridge_from_all_chains = False
+    sleep_between_transfers = [120, 300]
+
+    orbiter_inst = Orbiter(wallet_info)
+    await orbiter_inst.transfer_eth(
+        from_chains, min_amount, max_amount, decimal, all_amount, min_percent, max_percent, save_funds,
+        check_balance_on_dest, check_amount, min_required_amount, to_chain, bridge_from_all_chains,
+        sleep_between_transfers=sleep_between_transfers
+    )
+
+
+async def wrap_eth(wallet_info):
+    """
+    Wrap ETH
+    ______________________________________________________
+    all_amount - wrap from min_percent to max_percent
+    """
+
+    min_amount = 0.001
+    max_amount = 0.002
+    decimal = 4
+
+    all_amount = True
+
+    min_percent = 5
+    max_percent = 10
+
+    base_inst = Base(wallet_info)
+    await base_inst.wrap_eth(min_amount, max_amount, decimal, all_amount, min_percent, max_percent)
+
+
+async def unwrap_eth(wallet_info):
+    """
+    Unwrap ETH
+    ______________________________________________________
+    all_amount - unwrap from min_percent to max_percent
+    """
+
+    min_amount = 0.001
+    max_amount = 0.002
+    decimal = 4
+
+    all_amount = True
+
+    min_percent = 100
+    max_percent = 100
+
+    base_inst = Base(wallet_info)
+    await base_inst.unwrap_eth(min_amount, max_amount, decimal, all_amount, min_percent, max_percent)
+
+
+async def swap_uniswap(wallet_info):
+    """
+    Make swap on Uniswap
+    ______________________________________________________
+    from_token – Choose SOURCE token ETH, USDBC | Select one
+    to_token – Choose DESTINATION token ETH, USDBC | Select one
+
+    Disclaimer - You can swap only ETH to any token or any token to ETH!
+    ______________________________________________________
+    all_amount - swap from min_percent to max_percent
+    """
+
+    from_token = "USDBC"
+    to_token = "ETH"
+
+    min_amount = 0.001
+    max_amount = 0.002
+    decimal = 6
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 1
+    max_percent = 1
+
+    uniswap_inst = Uniswap(wallet_info)
+    await uniswap_inst.swap(
+        from_token, to_token, min_amount, max_amount, decimal, slippage, all_amount, min_percent, max_percent
+    )
+
+
+async def swap_pancake(wallet_info):
+    """
+    Make swap on PancakeSwap
+    ______________________________________________________
+    from_token – Choose SOURCE token ETH, USDBC | Select one
+    to_token – Choose DESTINATION token ETH, USDBC | Select one
+
+    Disclaimer - You can swap only ETH to any token or any token to ETH!
+    ______________________________________________________
+    all_amount - swap from min_percent to max_percent
+    """
+
+    from_token = "ETH"
+    to_token = "USDBC"
+
+    min_amount = 0.001
+    max_amount = 0.002
+    decimal = 6
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 1
+    max_percent = 1
+
+    pancake_inst = Pancake(wallet_info)
+    await pancake_inst.swap(
+        from_token, to_token, min_amount, max_amount, decimal, slippage, all_amount, min_percent, max_percent
+    )
+
+
+async def swap_woofi(wallet_info):
+    """
+    Make swap on WooFi
+    ______________________________________________________
+    from_token – Choose SOURCE token ETH, USDBC | Select one
+    to_token – Choose DESTINATION token ETH, USDBC | Select one
+    ______________________________________________________
+    all_amount - swap from min_percent to max_percent
+    """
+
+    from_token = "ETH"
+    to_token = "USDBC"
+
+    min_amount = 0.0001
+    max_amount = 0.0002
+    decimal = 6
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 1
+    max_percent = 1
+
+    woofi_inst = WooFi(wallet_info)
+    await woofi_inst.swap(
+        from_token, to_token, min_amount, max_amount, decimal, slippage, all_amount, min_percent, max_percent
+    )
+
+
+async def swap_baseswap(wallet_info):
+    """
+    Make swap on BaseSwap
+    ______________________________________________________
+    from_token – Choose SOURCE token ETH, USDBC | Select one
+    to_token – Choose DESTINATION token ETH, USDBC | Select one
+
+    Disclaimer - You can swap only ETH to any token or any token to ETH!
+    ______________________________________________________
+    all_amount - swap from min_percent to max_percent
+    """
+
+    from_token = "USDBC"
+    to_token = "ETH"
+
+    min_amount = 0.0001
+    max_amount = 0.0002
+    decimal = 6
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 1
+    max_percent = 1
+
+    baseswap_inst = BaseSwap(wallet_info)
+    await baseswap_inst.swap(from_token, to_token, min_amount, max_amount, decimal, slippage, all_amount, min_percent,
+                             max_percent)
+
+
+async def swap_alienswap(wallet_info):
+    """
+    Make swap on AlienSwap
+    ______________________________________________________
+    from_token – Choose SOURCE token ETH, USDBC | Select one
+    to_token – Choose DESTINATION token ETH, USDBC | Select one
+
+    Disclaimer - You can swap only ETH to any token or any token to ETH!
+    ______________________________________________________
+    all_amount - swap from min_percent to max_percent
+    """
+
+    from_token = "USDC"
+    to_token = "ETH"
+
+    min_amount = 0.0001
+    max_amount = 0.0002
+    decimal = 6
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 100
+    max_percent = 100
+
+    alienswap_inst = AlienSwap(wallet_info)
+    await alienswap_inst.swap(
+        from_token, to_token, min_amount, max_amount, decimal, slippage, all_amount, min_percent, max_percent
+    )
+
+
+async def swap_odos(wallet_info):
+    """
+    Make swap on Odos
+    ______________________________________________________
+    from_token – Choose SOURCE token ETH, WETH, USDBC | Select one
+    to_token – Choose DESTINATION token ETH, WETH, USDBC | Select one
+
+    Disclaimer - If you use True for use_fee, you support me 1% of the transaction amount
+    ______________________________________________________
+    all_amount - swap from min_percent to max_percent
+    """
+
+    from_token = "USDBC"
+    to_token = "ETH"
+
+    min_amount = 0.0001
+    max_amount = 0.0002
+    decimal = 6
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 1
+    max_percent = 1
+
+    odos_inst = Odos(wallet_info)
+    await odos_inst.swap(
+        from_token, to_token, min_amount, max_amount, decimal, slippage, all_amount, min_percent, max_percent
+    )
+
+
+async def swap_inch(wallet_info):
+    """
+    Make swap on 1inch
+    ______________________________________________________
+    from_token – Choose SOURCE token ETH, WETH, USDBC | Select one
+    to_token – Choose DESTINATION token ETH, WETH, USDBC | Select one
+
+    Disclaimer - If you use True for use_fee, you support me 1% of the transaction amount
+    ______________________________________________________
+    all_amount - swap from min_percent to max_percent
+    """
+
+    from_token = "ETH"
+    to_token = "USDBC"
+
+    min_amount = 0.0001
+    max_amount = 0.0002
+    decimal = 6
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 1
+    max_percent = 1
+
+    inch_dex_inst = Inch(wallet_info)
+    await inch_dex_inst.swap(
+        from_token, to_token, min_amount, max_amount, decimal, slippage, all_amount, min_percent, max_percent
+    )
+
+
+async def swap_openocean(wallet_info):
+    """
+    Make swap on OpenOcean
+    ______________________________________________________
+    from_token – Choose SOURCE token ETH, WETH, USDBC | Select one
+    to_token – Choose DESTINATION token ETH, WETH, USDBC | Select one
+
+    Disclaimer - If you use True for use_fee, you support me 1% of the transaction amount
+    ______________________________________________________
+    all_amount - swap from min_percent to max_percent
+    """
+
+    from_token = "ETH"
+    to_token = "USDBC"
+
+    min_amount = 0.0001
+    max_amount = 0.0001
+    decimal = 6
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 1
+    max_percent = 1
+
+    openocean_inst = OpenOcean(wallet_info)
+    await openocean_inst.swap(
+        from_token, to_token, min_amount, max_amount, decimal, slippage, all_amount, min_percent, max_percent
+    )
+
+
+async def swap_xyswap(wallet_info):
+    """
+    Make swap on XYSwap
+    ______________________________________________________
+    from_token – Choose SOURCE token ETH, WETH, USDBC | Select one
+    to_token – Choose DESTINATION token ETH, WETH, USDBC | Select one
+
+    Disclaimer - If you use True for use_fee, you support me 1% of the transaction amount
+    ______________________________________________________
+    all_amount - swap from min_percent to max_percent
+    """
+
+    from_token = "ETH"
+    to_token = "USDBC"
+
+    min_amount = 0.0001
+    max_amount = 0.0001
+    decimal = 6
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 1
+    max_percent = 1
+
+    xyswap_inst = XYSwap(wallet_info)
+    await xyswap_inst.swap(
+        from_token, to_token, min_amount, max_amount, decimal, slippage, all_amount, min_percent, max_percent
+    )
+
+
+async def swap_maverick(wallet_info):
+    """
+    Make swap on Maverick
+    ______________________________________________________
+    from_token – Choose SOURCE token ETH, USDBC | Select one
+    to_token – Choose DESTINATION token ETH, USDBC | Select one
+    ______________________________________________________
+    all_amount - swap from min_percent to max_percent
+    """
+
+    from_token = "ETH"
+    to_token = "USDBC"
+
+    min_amount = 0.0001
+    max_amount = 0.0001
+    decimal = 6
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 1
+    max_percent = 1
+
+    maverick_inst = Maverick(wallet_info)
+    await maverick_inst.swap(
+        from_token, to_token, min_amount, max_amount, decimal, slippage, all_amount, min_percent, max_percent
+    )
+
+
+async def bungee_refuel(wallet_info):
+    """
+    Make refuel on Bungee
+    ______________________________________________________
+    to_chain – Choose DESTINATION chain: BSC, OPTIMISM, GNOSIS, POLYGON, ZKSYNC, ARBITRUM, AVALANCHE, AURORA, ZK_EVM
+
+    Disclaimer - The chain will be randomly selected
+    ______________________________________________________
+    random_amount – True - amount random from min to max | False - use min amount
+    """
+
+    chain_list = ["GNOSIS"]
+
+    random_amount = False
+
+    bungee_inst = Bungee(wallet_info)
+    await bungee_inst.refuel(chain_list, random_amount)
+
+
+async def stargate_bridge(wallet_info):
+    """
+    Stargate bridge ETH
+    ______________________________________________________
+    to_chain – Choose DESTINATION chain: arbitrum, optimism, linea
+
+    Disclaimer - The chain will be randomly selected
+    ______________________________________________________
+    random_amount – True - amount random from min to max | False - use min amount
+    """
+
+    chain_list = ["arbitrum", "optimism"]
+
+    min_amount = 0.0001
+    max_amount = 0.0002
+    decimal = 5
+
+    slippage = 1
+
+    all_amount = True
+
+    min_percent = 10
+    max_percent = 10
+
+    stargate_inst = Stargate(wallet_info)
+    await stargate_inst.bridge(chain_list, min_amount, max_amount, decimal,
+                               slippage, all_amount, min_percent, max_percent)
+
+
+async def deposit_aave(wallet_info):
+    """
+    Make deposit on Aave
+    ______________________________________________________
+    make_withdraw - True, if need withdraw after deposit
+
+    all_amount - deposit from min_percent to max_percent
+    """
+    min_amount = 0.0001
+    max_amount = 0.0002
+    decimal = 5
+
+    sleep_from = 5
+    sleep_to = 24
+
+    make_withdraw = True
+
+    all_amount = True
+
+    min_percent = 5
+    max_percent = 10
+
+    aave_inst = Aave(wallet_info)
+    await aave_inst.deposit(
+        min_amount, max_amount, decimal, sleep_from, sleep_to, make_withdraw, all_amount, min_percent, max_percent
+    )
+
+
+async def deposit_moonwell(wallet_info):
+    """
+    Make deposit on MoonWell
+    ______________________________________________________
+    make_withdraw - True, if need withdraw after deposit
+
+    all_amount - deposit from min_percent to max_percent
+    """
+    min_amount = 0.0001
+    max_amount = 0.0002
+    decimal = 5
+
+    sleep_from = 5
+    sleep_to = 24
+
+    make_withdraw = True
+
+    all_amount = True
+
+    min_percent = 5
+    max_percent = 10
+
+    moonwell_inst = MoonWell(wallet_info)
+    await moonwell_inst.deposit(
+        min_amount, max_amount, decimal, sleep_from, sleep_to, make_withdraw, all_amount, min_percent, max_percent
+    )
+
+
+async def bridge_nft(wallet_info):
+    """
+    Make mint NFT and bridge NFT on L2Telegraph
+    """
+
+    sleep_from = 5
+    sleep_to = 20
+
+    l2telegraph_inst = L2Telegraph(wallet_info)
+    await l2telegraph_inst.bridge(sleep_from, sleep_to)
+
+
+async def mint_mintfun(wallet_info):
+    """
+    Mint NFT on Mint.Fun
+    ______________________________________________________
+    Disclaimer - The Mint function should be called "mint", to make sure of this,
+                 look at the name in Rabby Wallet or in explorer
+    """
+
+    nft_contracts_data = {
+        "0x69b69cc6e9f99c62a003fd9e143c126504d49dc2": 1,
+        "0xea0b3e39ccd46d7F2B338D784De8519902f7E17E": 3,
+    }
+
+    mintfun_inst = MintFun(wallet_info)
+    await mintfun_inst.mint(nft_contracts_data)
+
+
+async def mint_zerius(wallet_info):
+    """
+    Mint + bridge Zerius NFT
+    ______________________________________________________
+    chains - list chains for random chain bridge: arbitrum, optimism, polygon, bsc, avalanche, zora
+    Disclaimer - The Mint function should be called "mint", to make sure of this,
+                 look at the name in Rabby Wallet or in explorer
+    """
+
+    chains = ["zora"]
+
+    sleep_from = 200
+    sleep_to = 700
+
+    zerius_inst = Zerius(wallet_info)
+    await zerius_inst.bridge(chains, sleep_from, sleep_to)
+
+
+async def mint_nft(wallet_info):
+    """
+    Mint NFT on NFTS2ME
+    ______________________________________________________
+    Specify contracts at data/nfts2me_contracts.json file or use nfts2me_search_contracts() module
+    """
+
+    contracts = [
+        '0x148890A7978fED6Fc1dbBF9263dd72C52C21eAe6',
+        '0x19915657BFD1291b017Fa8b1fdDbc7274F99A3c0',
+        '0xeF9eCF45F22e96486ECDf41F7E732234995b98DD',
+    ]  # await parse_nfts2me_contracts(0, 200, 6000)
+
+    minter = Minter(wallet_info)
+    await minter.mint_nft(contracts)
+
+
+async def mint_zkstars(wallet_info):
+    """
+    Mint ZkStars NFT
+    """
+
+    contracts = [
+        "0x4c78c7d2f423cf07c6dc2542ac000c4788f03657",
+        "0x657130a14e93731dfecc772d210ae8333303986c",
+        "0x004416bef2544df0f02f23788c6ada0775868560",
+        "0x39b06911d22f4d3191827ed08ae35b84f68843e4",
+        "0x8a6a9ef84cd819a54eee3cf7cfd351d21ab6b5fe",
+        "0x8fb3225d0a85f2a49714acd36cdcd96a7b2b7fbc",
+        "0x91ad9ed35b1e9ff6975aa94690fa438efb5a7160",
+        "0x32d8eeb70eab5f5962190a2bb78a10a5a0958649",
+        "0xab62313752f90c24405287ad8c3bcf4c25c26e57",
+        "0x6f562b821b5cb93d4de2b0bd558cc8e46b632a08",
+        "0xb63159a26664a89abce783437fc17786af8bb46d",
+        "0x7e6b32d7eecddb6be496f232ab9316a5bf9f4e17",
+        "0xcb03866371fb149f3992f8d623d5aaa4b831e2fd",
+        "0x78c85441f53a07329e2380e49f1870199f70cee1",
+        "0x54c49cb80a0679e3217f86d891859b4e477b56c3",
+        "0xad6f16f5ff3461c83d639901bae1fb2a8a68aa31",
+        "0x023a7c97679f2c121a31bacf37292dabf7ab97e9",
+        "0x5dabff127cad8d075b5cea7f795dcbae1ddf471d",
+        "0xd3c6386362dabab1a30acc2c377d9ac2cc8b7b16",
+        "0xed0407d6b84b2c86418cac16a347930b222b505c"
+    ]
+
+    mint_min = 1
+    mint_max = 1
+
+    mint_all = False
+
+    sleep_from = 5
+    sleep_to = 10
+
+    zkkstars = ZkStars(wallet_info)
+    await zkkstars.mint(contracts, mint_min, mint_max, mint_all, sleep_from, sleep_to)
+
+
+async def swap_tokens(wallet_info):
+    """
+    SwapTokens module: Automatically swap tokens to ETH
+    ______________________________________________________
+    use_dex - Choose any dex: uniswap, pancake, woofi, baseswap, alienswap, maverick, odos, inch, xyswap, openocean
+    """
+
+    use_dex = [
+        "uniswap", "pancake", "woofi", "baseswap",
+        "alienswap", "maverick", "odos", "inch",
+        "xyswap", "openocean"
+    ]
+
+    use_tokens = ["USDBC"]
+
+    sleep_from = 300
+    sleep_to = 600
+
+    slippage = 1
+
+    min_percent = 100
+    max_percent = 100
+
+    swap_tokens_inst = SwapTokens(wallet_info)
+    await swap_tokens_inst.swap(use_dex, use_tokens, sleep_from, sleep_to, slippage, min_percent, max_percent)
+
+
+async def swap_multiswap(wallet_info):
+    """
+    Multi-Swap module: Automatically performs the specified number of swaps in one of the dexes.
+    ______________________________________________________
+    use_dex - Choose any dex: uniswap, pancake, woofi, baseswap, alienswap, maverick, odos, inch, xyswap, openocean
+    quantity_swap - Quantity swaps
+    ______________________________________________________
+    random_swap_token - If True the swap path will be [ETH -> USDBC -> USDBC -> ETH] (random!)
+    If False the swap path will be [ETH -> USDBC -> ETH -> USDBC]
+    """
+
+    use_dex = ["uniswap", "pancake", "woofi", "baseswap", "odos"]
+
+    min_swap = 1
+    max_swap = 2
+
+    sleep_from = 3
+    sleep_to = 7
+
+    slippage = 1
+
+    random_swap_token = True
+
+    min_percent = 5
+    max_percent = 10
+
+    multi = Multiswap(wallet_info)
+    await multi.swap(
+        use_dex, sleep_from, sleep_to, min_swap, max_swap, slippage, random_swap_token, min_percent, max_percent
+    )
+
+
+async def unlooped_mint(wallet_info):
+
+    contract = "0xde3e6A01663025301838b64685845DAA5cFcCBD8"  # Mercury
+
+    unlooped_inst = Unlooped(wallet_info)
+    await unlooped_inst.mint(contract)
+
+
+async def custom_routes(wallet_info):
+    """
+    BRIDGE:
+        – bridge_base
+        – bridge_orbiter
+        – bungee_refuel
+        – stargate_bridge
+    WRAP:
+        – wrap_eth
+        – unwrap_eth
+    DEX:
+        – swap_uniswap
+        – swap_pancake
+        – swap_woofi
+        – swap_baseswap
+        – swap_alienswap
+        – swap_maverick
+        – swap_odos
+        – swap_inch
+        – swap_openocean
+        – swap_xyswap
+    LANDING:
+        – deposit_aave
+        – deposit_moonwell
+        – withdraw_aave
+        – withdraw_moonwell
+    NFT/DOMAIN:
+        – mint_zerius
+        – mint_zkstars
+        – mint_mintfun
+        – mint_nft
+    ANOTHER:
+        – send_message
+        – send_mail (Dmail)
+        – bridge_nft
+        – create_portfolio
+        – swap_tokens
+        – swap_multiswap
+        – create_safe
+        – mint_nft
+    ______________________________________________________
+    Disclaimer - You can add modules to [] to select random ones,
+    example [module_1, module_2, [module_3, module_4], module 5]
+    The script will start with module 1, 2, 5 and select a random one from module 3 and 4
+
+    You can also specify None in [], and if None is selected by random, this module will be skipped
+
+    You can also specify () to perform the desired action a certain number of times
+    example (send_mail, 1, 10) run this module 1 to 10 times
+    """
+
+    use_modules = [
+        mint_coinearnings,
+        unlooped_mint
+    ]
+
+    sleep_from = 3600
+    sleep_to = 7200
+
+    random_module = True
+
+    routes_ints = Routes(wallet_info)
+    await routes_ints.start(use_modules, sleep_from, sleep_to, random_module)
+
+
+async def automatic_routes(wallet_info):
+    """
+    Модуль автоматически генерирует пути по которому пройдет кошелек,
+    меняя вероятности выбрать тот или иной модуль для каждого кошелька
+
+    Parameters
+    ----------
+    transaction_count - количество транзакций (не обязательно все выполнятся, модули могут пропускаться)
+    cheap_ratio - от 0 до 1, доля дешевых транзакций при построении маршрута
+    cheap_modules - список модулей, которые будут использоваться в качестве дешевых
+    expensive_modules - список модулей, которые будут использоваться в качестве дорогих
+    -------
+
+    """
+
+    transaction_count = 25
+    cheap_ratio = 1.0
+
+    sleep_from = 30
+    sleep_to = 60
+
+    use_none = True
+    cheap_modules = [send_mail, create_safe, mint_zkstars, mint_nft]
+    expensive_modules = [swap_multiswap, deposit_aave, deposit_moonwell, create_portfolio, mint_zerius]
+
+    routes_inst = Routes(wallet_info)
+    await routes_inst.start_automatic(transaction_count, cheap_ratio,
+                                      sleep_from, sleep_to,
+                                      cheap_modules, expensive_modules,
+                                      use_none)
+
+
+async def nfts2me_search_contracts():
+    """
+    Module for searching nfts collections created in the nfts2me service.
+    If you do not want to search for smart contracts for the mint_nfts2me module,
+    you can run this module and it will add the addresses of contracts to the config by itself.
+    ______________________________________________________
+    mint_price - mint price of the searched contract
+    min_total_supply - minimum supply of the collection
+    search_limit - The maximum number of recent transactions to search through. Max: 10000
+    """
+    mint_price = 0
+    min_total_supply = 100
+    search_limit = 9000
+
+    await find_and_update_nfts2me_contracts(mint_price, min_total_supply, search_limit)
+
+
+# -------------------------------------------------------  NO NEED TO CHANGE MODULES
+
+async def vote_rubyscore(wallet_info):
+    """
+    Vote in Scroll at Rubyscore
+    """
+
+    rubyscore_inst = Rubyscore(wallet_info)
+    await rubyscore_inst.vote()
+
+
+async def send_mail(wallet_info):
+    dmail_inst = Dmail(wallet_info)
+    await dmail_inst.send_mail()
+
+
+async def withdraw_aave(wallet_info):
+    aave_inst = Aave(wallet_info)
+    await aave_inst.withdraw()
+
+
+async def withdraw_moonwell(wallet_info):
+    moonwell_inst = MoonWell(wallet_info)
+    await moonwell_inst.withdraw()
+
+
+async def send_message(wallet_info):
+    l2telegraph_inst = L2Telegraph(wallet_info)
+    await l2telegraph_inst.send_message()
+
+
+async def create_portfolio(wallet_info):
+    rai_inst = Rai(wallet_info)
+    await rai_inst.create()
+
+
+async def create_safe(wallet_info):
+    gnosis_safe = GnosisSafe(wallet_info)
+    await gnosis_safe.create_safe()
+
+
+async def mint_coinearnings(wallet_info):
+    nft = CoinEarnings(wallet_info)
+    await nft.mint()
+
+
+def get_tx_count():
+    asyncio.run(check_tx())
+
+
+def start_encrypt():
+    encrypt_privates(force=True)
