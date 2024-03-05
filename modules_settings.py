@@ -652,10 +652,25 @@ async def mint_nft(wallet_info):
     """
 
     contracts = [
-        '0x148890A7978fED6Fc1dbBF9263dd72C52C21eAe6',
-        '0x19915657BFD1291b017Fa8b1fdDbc7274F99A3c0',
-        '0xeF9eCF45F22e96486ECDf41F7E732234995b98DD',
-    ]  # await parse_nfts2me_contracts(0, 200, 6000)
+        ('0x8E16744fF0Ef42DB38276ecc32D248237548297f', 'mint'),  # sakura blade #1
+        ('0x0E7733747cFB856637c171b049d1bF0b4a5636cd', 'mint'),  # sakura blade #2
+        ('0x3cCF622C09CADd841AD1F1d2D3Fdd99A016Ba0c3', 'mint'),  # sakura blade #3
+        ('0x21e3E261b234931Fef4291df2F8a3FeB1869CfaA', 'mint'),  # sakura blade #4
+        ('0x995bD197fb9B866Ab262A6243a463F441894d35f', 'mint'),  # sakura blade #5
+        ('0xeF9eCF45F22e96486ECDf41F7E732234995b98DD', 'mint'),  # Back to ATH
+        ('0x19915657BFD1291b017Fa8b1fdDbc7274F99A3c0', 'mint'),  # MandaCat
+        ('0xdE69cdB6a0E0DeBEFaCb4998FDdc9Ff32CE1e76D', 'mint'),  # Paradise on earth
+        ('0x4a5b47e3b69Dc91fC0C951333c815Ea0d774a440', 'mint'),  # Girl with Pearl
+        ('0x28F0249d4a52A803cb585E1a369CAf6b774D96c7', 'mint'),  # Blue hair girl
+        ('0x3Ef5c6C5230b7832cC39830BAAa0BE1092b11C63', 'mint'),  # Battle Rhino
+        ('0xCbc5c4F0eC44C2Ee19D90f6C2968189ABE49309c', 'mint'),  # The World Ahead
+        ('0xc38964D832873Fb47555B903b03fB9Fd9ECdc346', 'mint'),  # Koala
+        ('0x6C40aF77cd9ebe10290A95B59E6EF1D81f88D449', 'mint'),  # Skeleton
+        ('0x8c157a18Da183DA04841CFeffA8278D66a7d0aE9', 'mint'),  # Meo Meo
+        ('0x2BEADfCc95C9730BcdBc69FE853370994BfA31dF', 'mint'),  # cube building
+        ('0x850116229A3dE92014d63eF6716d8BaCE40c6cbe', 'mint'),  # fuckers
+        ('0x2C98B101335695Ab2fC46e84dA9b1518bc4cA0EE', 'mint'),  # Two-tailed fox
+    ]
 
     minter = Minter(wallet_info)
     await minter.mint_nft(contracts)
@@ -876,7 +891,7 @@ async def nfts2me_search_contracts():
     search_limit - The maximum number of recent transactions to search through. Max: 10000
     """
     mint_price = 0
-    min_total_supply = 100
+    min_total_supply = 1000
     search_limit = 9000
 
     await find_and_update_nfts2me_contracts(mint_price, min_total_supply, search_limit)

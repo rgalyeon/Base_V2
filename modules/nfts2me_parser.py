@@ -1,10 +1,11 @@
 import asyncio
 import json
+import random
 
 import aiohttp
 from utils.basescan_api import make_api_url
 from utils.helpers import retry
-from config import NFTS2ME_CREATOR_CONTRACT
+from config import NFTS2ME_CREATOR_CONTRACT, RPC
 import pandas as pd
 from web3 import AsyncWeb3
 from web3.middleware import async_geth_poa_middleware
@@ -64,13 +65,13 @@ async def get_collections_tx():
 
 async def parse_nfts2me_contracts(mint_price, min_total_supply, n_contracts):
     w3 = AsyncWeb3(
-        AsyncWeb3.AsyncHTTPProvider('https://base.llamarpc.com'),
+        AsyncWeb3.AsyncHTTPProvider(random.choice(RPC["base"]["rpc"])),
         middlewares=[async_geth_poa_middleware]
     )
 
     collections_tx = await get_collections_tx()
 
-    semaphore = asyncio.Semaphore(20)
+    semaphore = asyncio.Semaphore(1)
     # Создаём асинхронные задачи для каждого хеша
     tasks = [process_contract_with_semaphore(w3, tx_hash, semaphore, mint_price, min_total_supply) for tx_hash in
              collections_tx[:n_contracts + 100]]

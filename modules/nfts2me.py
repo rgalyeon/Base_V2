@@ -1,8 +1,7 @@
 import random
 
 from loguru import logger
-from config import NFTS2ME_ABI, NFTS2ME_CONTRACTS, NFTS2ME_MAIN_ABI
-from modules.nfts2me_parser import parse_nfts2me_contracts
+from config import NFTS2ME_ABI
 from utils.gas_checker import check_gas
 from utils.helpers import retry
 from .account import Account
