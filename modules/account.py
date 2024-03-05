@@ -206,3 +206,13 @@ class Account:
         priority_fee = int(round(sum(non_empty_block_priority_fees) / divisor_priority))
 
         return priority_fee
+
+    async def setup_w3(self, chain):
+        self.w3 = AsyncWeb3(
+            AsyncWeb3.AsyncHTTPProvider(random.choice(RPC[chain]["rpc"]),
+                                        request_kwargs=self.request_kwargs),
+            middlewares=[async_geth_poa_middleware]
+        )
+        self.chain = chain
+        self.explorer = RPC[chain]["explorer"]
+        self.token = RPC[chain]["token"]

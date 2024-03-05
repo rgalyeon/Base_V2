@@ -28,15 +28,6 @@ class Transfer(Account):
         source_chains = [chain for chain, _ in sorted(source_chains, key=lambda x: x[1], reverse=True)]
         return source_chains
 
-    def change_settings(self, source_chain):
-        self.chain = source_chain
-        self.w3 = AsyncWeb3(AsyncHTTPProvider(random.choice(RPC[self.chain]["rpc"]),
-                                              request_kwargs=self.request_kwargs),
-                            middlewares=[async_geth_poa_middleware],
-                            )
-        self.explorer = RPC[self.chain]["explorer"]
-        self.token = RPC[self.chain]["token"]
-
     async def check_balance_on_destination(self, check: bool, dst_chain: str, amount_to_check: float):
         if not check:
             return True
@@ -103,7 +94,7 @@ class Transfer(Account):
             logger.warning(f'[{self.account_id}][{self.address}] No chains with required balance. Skip module')
             return
         for source_chain in source_chains:
-            self.change_settings(source_chain)
+            await self.setup_w3(source_chain)
 
             amount_wei, amount, balance = await self.calculate_transfer_amount(min_amount=min_amount,
                                                                                max_amount=max_amount,
