@@ -670,6 +670,13 @@ async def mint_nft(wallet_info):
         ('0x2BEADfCc95C9730BcdBc69FE853370994BfA31dF', 'mint'),  # cube building
         ('0x850116229A3dE92014d63eF6716d8BaCE40c6cbe', 'mint'),  # fuckers
         ('0x2C98B101335695Ab2fC46e84dA9b1518bc4cA0EE', 'mint'),  # Two-tailed fox
+        ('0x84CF15984b24E10AB2Ff121bDA714Be2bA90f986', 'mint'),  # kateVG3
+        ('0x811835dfA6bF48a0F1C4fCFCF93ea89F9e881e4f', 'mint'),  # nancyTON
+        ('0xfEfc993328D387b5ca34b082a0ba350B03e2bf6d', 'mint'),  # alvar
+        ('0xEc302Cb786F28229bB5b1f8Fa5BBC1c8F570647B', 'mint'),  # anny0
+        ('0xC087546B6C7c62d6bBe148c6015Ca71e17f0757a', 'mint'),  # danny1
+        ('0xC2A25349aDd0c6368CC099be5d3cde0426fc66a0', 'mint'),  # kelly
+        ('0x3C3987317A224EC871c81ebFDd042eFFaba69E00', 'mint'),  # Marty
     ]
 
     minter = Minter(wallet_info)
