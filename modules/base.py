@@ -17,8 +17,6 @@ class Base(Transfer):
     def __init__(self, wallet_info) -> None:
         super().__init__(wallet_info=wallet_info)
 
-    @retry
-    @check_gas
     async def deposit(
             self,
             min_amount: float,
