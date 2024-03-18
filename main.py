@@ -68,6 +68,7 @@ def get_module():
             Choice(f"{next(counter)}) Use Multiswap", swap_multiswap),
             Choice(f"{next(counter)}) Mint COINearnings", mint_coinearnings),
             Choice(f"{next(counter)}) Mint unlooped", unlooped_mint),
+            Choice(f"{next(counter)}) Mint EIP-4844 nft", mint_eip4844),
             Choice(f"{next(counter)}) Use custom routes", custom_routes),
             Choice(f"{next(counter)}) Use automatic routes", automatic_routes),
             Choice(f"{next(counter)}) Check transaction count", "tx_checker"),

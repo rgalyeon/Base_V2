@@ -34,3 +34,4 @@ from .transfer import Transfer
 from .mint_coinearnings import CoinEarnings
 from .mint_unlooped import Unlooped
 from .rubyscore import Rubyscore
+from .mint_eip4844 import EIP4844

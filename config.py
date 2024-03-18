@@ -113,6 +113,9 @@ with open("data/nfts2me_contracts.json", "r") as file:
 with open('data/orbiter_maker.json', 'r') as file:
     ORBITER_MAKER = json.load(file)
 
+with open('data/abi/eip4844_nft/abi.json', 'r') as file:
+    EIP4844_ABI = json.load(file)
+
 NFTS2ME_CONTRACTS_PATH = 'data/nfts2me_contracts.json'
 
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
@@ -215,6 +218,8 @@ COINEARNINGS_CONTRACT = "0x1d6b183bd47f914f9f1d3208edcf8befd7f84e63"
 UNLOOPED_CONTRACT = "0x358268927d4f229629afeb59cd3a84f33e771690"
 
 RUBYSCORE_CONTRACT = "0xe10add2ad591a7ac3ca46788a06290de017b9fb4"
+
+EIP_4844_CONTRACT = "0x273cA93A52b817294830eD7572aA591Ccfa647fd"
 
 #################################################################
 #                      BASESCAN API                             #

@@ -950,6 +950,11 @@ async def mint_coinearnings(wallet_info):
     await nft.mint()
 
 
+async def mint_eip4844(wallet_info):
+    nft_inst = EIP4844(wallet_info)
+    await nft_inst.mint_eip_4844()
+
+
 def get_tx_count():
     asyncio.run(check_tx())
 

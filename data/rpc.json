@@ -56,8 +56,7 @@
   },
   "base": {
     "rpc": [
-      "https://rpc.ankr.com/base",
-      "https://base.meowrpc.com"
+      "https://rpc.ankr.com/base"
     ],
     "explorer": "https://basescan.org/tx/",
     "token": "ETH",
