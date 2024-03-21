@@ -564,7 +564,7 @@ async def deposit_aave(wallet_info):
     max_percent = 10
 
     aave_inst = Aave(wallet_info)
-    await aave_inst.deposit(
+    await aave_inst.router(
         min_amount, max_amount, decimal, sleep_from, sleep_to, make_withdraw, all_amount, min_percent, max_percent
     )
 
@@ -592,7 +592,7 @@ async def deposit_moonwell(wallet_info):
     max_percent = 10
 
     moonwell_inst = MoonWell(wallet_info)
-    await moonwell_inst.deposit(
+    await moonwell_inst.router(
         min_amount, max_amount, decimal, sleep_from, sleep_to, make_withdraw, all_amount, min_percent, max_percent
     )
 
@@ -641,7 +641,7 @@ async def mint_zerius(wallet_info):
     sleep_to = 700
 
     zerius_inst = Zerius(wallet_info)
-    await zerius_inst.bridge(chains, sleep_from, sleep_to)
+    await zerius_inst.mint_and_bridge(chains, sleep_from, sleep_to)
 
 
 async def mint_nft(wallet_info):

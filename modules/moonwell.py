@@ -13,25 +13,16 @@ class MoonWell(Account):
         self.contract = self.get_contract(MOONWELL_CONTRACT, MOONWELL_ABI)
         self.weth_contract = self.get_contract(MOONWELL_WETH_CONTRACT, MOONWELL_ABI)
 
-    async def get_deposit_amount(self):
-        amount = await self.weth_contract.functions.balanceOf(self.address).call()
+    async def router(self, min_amount,
+                     max_amount,
+                     decimal,
+                     sleep_from,
+                     sleep_to,
+                     make_withdraw,
+                     all_amount,
+                     min_percent,
+                     max_percent):
 
-        return amount
-
-    @retry
-    @check_gas
-    async def deposit(
-            self,
-            min_amount: float,
-            max_amount: float,
-            decimal: int,
-            sleep_from: int,
-            sleep_to: int,
-            make_withdraw: bool,
-            all_amount: bool,
-            min_percent: int,
-            max_percent: int
-    ) -> None:
         amount_wei, amount, balance = await self.get_amount(
             "ETH",
             min_amount,
@@ -41,6 +32,20 @@ class MoonWell(Account):
             min_percent,
             max_percent
         )
+
+        await self.deposit(amount_wei, amount, balance)
+        if make_withdraw:
+            await sleep(sleep_from, sleep_to)
+            await self.withdraw()
+
+    async def get_deposit_amount(self):
+        amount = await self.weth_contract.functions.balanceOf(self.address).call()
+
+        return amount
+
+    @retry
+    @check_gas
+    async def deposit(self, amount_wei, amount, balance):
 
         logger.info(f"[{self.account_id}][{self.address}] Make deposit on Moonwell | {amount} ETH")
 
@@ -53,11 +58,6 @@ class MoonWell(Account):
         txn_hash = await self.send_raw_transaction(signed_txn)
 
         await self.wait_until_tx_finished(txn_hash.hex())
-
-        if make_withdraw:
-            await sleep(sleep_from, sleep_to)
-
-            await self.withdraw()
 
     @retry
     @check_gas
