@@ -126,7 +126,7 @@ def main(module):
 
 if __name__ == '__main__':
     print(HEADER)
-    print("❤️ Author – https://t.me/rgalyeon\n")
+    print("Author – https://t.me/block_nine\n")
 
     if SAVE_LOGS:
         logger.add('logs.txt', filter=filter_out_utils)
@@ -138,4 +138,4 @@ if __name__ == '__main__':
         main(module)
 
     print("ALL DONE!")
-    print("❤️ Author – https://t.me/rgalyeon\n")
+    print("Author – https://t.me/block_nine\n")
