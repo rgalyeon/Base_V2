@@ -830,6 +830,9 @@ async def custom_routes(wallet_info):
         – swap_multiswap
         – create_safe
         – mint_nft
+
+    If random_module = True and withdraw_okx in use_modules, withdraw_okx will always be executed first and
+                       transfer_to_okx will be executed last
     ______________________________________________________
     Disclaimer - You can add modules to [] to select random ones,
     example [module_1, module_2, [module_3, module_4], module 5]
