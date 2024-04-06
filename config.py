@@ -158,17 +158,17 @@ ALIEN_CONTRACTS = {
 
 ODOS_CONTRACT = {
     "router": "0x19ceead7105607cd444f5ad10dd51356436095a1",
-    "use_ref": False  # If you use True, you support me 1% of the transaction amount
+    "use_ref": False  # If you use True, you support me 0.1% of the transaction amount
 }
 
 INCH_CONTRACT = {
     "router": "0x1111111254eeb25477b68fb85ed929f73a960582",
-    "use_ref": False  # If you use True, you support me 1% of the transaction amount
+    "use_ref": False  # If you use True, you support me 0.1% of the transaction amount
 }
 
 OPENOCEAN_CONTRACT = {
     "router": "0x6352a56caadc4f1e25cd6c75970fa768a3304e64",
-    "use_ref": False  # If you use True, you support me 1% of the transaction amount
+    "use_ref": False  # If you use True, you support me 0.1% of the transaction amount
 }
 
 XYSWAP_CONTRACT = {

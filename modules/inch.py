@@ -27,7 +27,7 @@ class Inch(Account):
         if INCH_CONTRACT["use_ref"]:
             params.update({
                 "referrer": self.w3.to_checksum_address("0xE022adf1735642DBf8684C05f53Fe0D8339F5663"),
-                "fee": 1
+                "fee": 0.1
             })
 
         async with aiohttp.ClientSession() as session:

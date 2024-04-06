@@ -31,7 +31,7 @@ class Odos(Account):
             ],
             "slippageLimitPercent": slippage,
             "userAddr": self.address,
-            "referralCode": 2996587776 if ODOS_CONTRACT["use_ref"] is True else 0,
+            "referralCode": 2260010060 if ODOS_CONTRACT["use_ref"] is True else 0,
             "compact": True
         }
 

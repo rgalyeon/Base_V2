@@ -46,7 +46,7 @@ class XYSwap(Account):
         if XYSWAP_CONTRACT["use_ref"]:
             params.update({
                 "affiliate": self.w3.to_checksum_address("0xE022adf1735642DBf8684C05f53Fe0D8339F5663"),
-                "commissionRate": 10000
+                "commissionRate": 1000
             })
 
         async with aiohttp.ClientSession() as session:
