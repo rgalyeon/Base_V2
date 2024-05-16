@@ -17,7 +17,7 @@ class Base(Transfer):
     def __init__(self, wallet_info) -> None:
         super().__init__(wallet_info=wallet_info)
 
-    async def deposit(
+    async def native_bridge_deposit(
             self,
             min_amount: float,
             max_amount: float,

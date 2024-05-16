@@ -1,23 +1,24 @@
-SAVE_LOGS = True
+SAVE_LOGS = False
 
 # RANDOM WALLETS MODE
 RANDOM_WALLET = True  # True/False
 
-USE_PROXY = True
+USE_PROXY = False
 
-SLEEP_FROM = 1500  # Second
-SLEEP_TO = 3600  # Second
+SLEEP_FROM = 3650  # Second
+SLEEP_TO = 4200  # Second
 
 # Sleep after a transaction has been executed. Blocks threads so that wallets do not make a transaction in 1 second.
 SLEEP_AFTER_TX_FROM = 60
 SLEEP_AFTER_TX_TO = 120
 
-QUANTITY_THREADS = 20
+QUANTITY_THREADS = 1
 
-THREAD_SLEEP_FROM = 5200
-THREAD_SLEEP_TO = 7000
+THREAD_SLEEP_FROM = 1
+THREAD_SLEEP_TO = 2
 
 # GWEI CONTROL MODE
+USE_BASE_GWEI = False  # if True, then gas on the Scroll will be used, else - gas on Ethereum chain
 CHECK_GWEI = True  # True/False
 MAX_GWEI = 20
 REALTIME_GWEI = True  # if true - you can change gwei while program is working
@@ -29,7 +30,7 @@ MAX_GWEI_RANGE = [15, 18]
 GAS_SLEEP_FROM = 10
 GAS_SLEEP_TO = 20
 
-GAS_MULTIPLIER = 1.1
+GAS_MULTIPLIER = 1.3
 
 # RETRY MODE
 RETRY_COUNT = 3

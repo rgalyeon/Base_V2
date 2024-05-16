@@ -71,6 +71,7 @@ def get_module():
             Choice(f"{next(counter)}) Mint EIP-4844 nft", mint_eip4844),
             Choice(f"{next(counter)}) Use custom routes", custom_routes),
             Choice(f"{next(counter)}) Use automatic routes", automatic_routes),
+            Choice(f"{next(counter)}) Progress checker", progress_check),
             Choice(f"{next(counter)}) Check transaction count", "tx_checker"),
             Choice(f"{next(counter)}) Exit", "exit"),
         ],
@@ -96,7 +97,7 @@ async def run_module(module, wallet_data):
 
         traceback.print_exc()
 
-    await sleep(SLEEP_FROM, SLEEP_TO)
+    await sleep(SLEEP_FROM, SLEEP_TO, message=f"Move to the next wallet or end of script")
 
 
 def _async_run_module(module, wallet_data):
@@ -111,6 +112,9 @@ def main(module):
 
     wallets_data = get_wallets()
 
+    if module == progress_check:
+        return progress_check(wallets_data)
+
     if RANDOM_WALLET:
         random.shuffle(wallets_data)
 
@@ -121,7 +125,8 @@ def main(module):
                 module,
                 wallet_data
             )
-            time.sleep(random.randint(THREAD_SLEEP_FROM, THREAD_SLEEP_TO))
+            if _ != len(wallet_data):
+                time.sleep(random.randint(THREAD_SLEEP_FROM, THREAD_SLEEP_TO))
 
 
 if __name__ == '__main__':

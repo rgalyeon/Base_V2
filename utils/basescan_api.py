@@ -1,4 +1,5 @@
-from config import BASESCAN_URL, BASESCAN_API_KEY
+from config import BASESCAN_URL, BASE_API_KEYS
+import random
 
 
 def make_api_url(module,
@@ -17,7 +18,7 @@ def make_api_url(module,
                          f'&action={action}' \
                          f'&address={address}' \
                          f'&tag=latest' \
-                         f'&apikey={BASESCAN_API_KEY}'
+                         f'&apikey={random.choice(BASE_API_KEYS)}'
 
     if kwargs:
         for key, value in kwargs.items():

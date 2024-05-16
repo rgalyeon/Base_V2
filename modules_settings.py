@@ -1,6 +1,7 @@
 import asyncio
 
 from modules import *
+from utils.progress_checker import Scan
 
 
 async def bridge_base(wallet_info):
@@ -16,16 +17,16 @@ async def bridge_base(wallet_info):
 
     all_amount = True
 
-    min_percent = 1
-    max_percent = 1
+    min_percent = 100
+    max_percent = 100
 
     check_balance_on_dest = False
     check_amount = 0.005
-    save_funds = [0.0011, 0.0013]
+    save_funds = [0.00045, 0.0007]
     min_required_amount = 0
 
     base_inst = Base(wallet_info)
-    await base_inst.deposit(
+    await base_inst.native_bridge_deposit(
         min_amount, max_amount, decimal, all_amount, min_percent, max_percent,
         save_funds, check_balance_on_dest, check_amount, min_required_amount
     )
@@ -830,6 +831,8 @@ async def custom_routes(wallet_info):
         – swap_multiswap
         – create_safe
         – mint_nft
+    BASE NFTS:
+        - mint_onchain_summer_is_back_nft
 
     If random_module = True and withdraw_okx in use_modules, withdraw_okx will always be executed first and
                        transfer_to_okx will be executed last
@@ -958,9 +961,22 @@ async def mint_eip4844(wallet_info):
     await nft_inst.mint_eip_4844()
 
 
+async def mint_onchain_summer_is_back_nft(wallet_info):
+    onchain_summer_inst = OnchainSummer(wallet_info)
+    await onchain_summer_inst.mint_onchain_summer_is_back()
+
+
 def get_tx_count():
     asyncio.run(check_tx())
 
 
 def start_encrypt():
     encrypt_privates(force=True)
+
+
+def progress_check(wallets_data):
+
+    replace = True
+    check_eth = True
+
+    Scan(wallets_data).get_wallet_progress(replace, check_eth=check_eth)

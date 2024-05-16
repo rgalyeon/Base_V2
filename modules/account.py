@@ -120,7 +120,7 @@ class Account:
 
         allowance_amount = await self.check_allowance(token_address, contract_address)
 
-        if amount > allowance_amount or amount == 0:
+        if amount > allowance_amount or (allowance_amount > 0 and amount == 0):
             logger.success(f"[{self.account_id}][{self.address}] Make approve")
 
             approve_amount = 2 ** 128 if amount > allowance_amount else 0
@@ -138,7 +138,7 @@ class Account:
 
             await self.wait_until_tx_finished(txn_hash.hex())
 
-            await sleep(5, 20)
+            await sleep(5, 20, message=f"[{self.account_id}][{self.address}] Sleep after approve")
 
     async def wait_until_tx_finished(self, hash: str, max_wait_time=180) -> None:
         start_time = time.time()
@@ -156,21 +156,14 @@ class Account:
                     return
             except TransactionNotFound:
                 if time.time() - start_time > max_wait_time:
-                    print(f'FAILED TX: {hash}')
+                    logger.warning(f"[{self.account_id}][{self.address}] Timeout. Failed tx: {self.explorer}{hash}")
                     return
                 await asyncio.sleep(1)
 
     async def sign(self, transaction) -> Any:
         if RPC[self.chain]["eip1559"]:
             max_priority_fee_per_gas = await self.get_priority_fee()
-            base_fee = await self.w3.eth.gas_price
-            max_fee_per_gas = int(base_fee + max_priority_fee_per_gas * GAS_MULTIPLIER)
-
-            if max_fee_per_gas > base_fee:
-                max_fee_per_gas = base_fee
-
-            if max_priority_fee_per_gas > max_fee_per_gas:
-                max_priority_fee_per_gas = int(max_fee_per_gas * 0.95)
+            max_fee_per_gas = int((await self.w3.eth.gas_price) * 1.15)
 
             transaction.update(
                 {

@@ -69,7 +69,7 @@ class Zerius(Account):
 
         nft_id = await self.get_nft_id(mint_nft)
 
-        await sleep(sleep_from, sleep_to)
+        await sleep(sleep_from, sleep_to, message=f'[{self.account_id}][{self.address}] Sleep after mint')
 
         l0_fee = await self.get_estimate_fee(chain_id, nft_id)
 

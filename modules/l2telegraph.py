@@ -85,7 +85,7 @@ class L2Telegraph(Account):
 
         nft_id = await self.mint()
 
-        await sleep(sleep_from, sleep_to)
+        await sleep(sleep_from, sleep_to, message=f"[{self.account_id}][{self.address}] Sleep after mint")
 
         tx_data = await self.get_tx_data(l0_fee)
 

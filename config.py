@@ -4,6 +4,7 @@ WALLET_DATA_PATH = 'wallet_data.xlsx'
 SHEET_NAME = 'evm'
 ENCRYPTED_DATA_PATH = 'encrypted_data.txt'
 REALTIME_SETTINGS_PATH = 'realtime_settings.json'
+PROGRESS_PATH = 'progress.xlsx'
 
 with open('data/rpc.json') as file:
     RPC = json.load(file)
@@ -116,6 +117,9 @@ with open('data/orbiter_maker.json', 'r') as file:
 with open('data/abi/eip4844_nft/abi.json', 'r') as file:
     EIP4844_ABI = json.load(file)
 
+with open('data/abi/onchain_summer/abi.json', 'r') as file:
+    ONCHAIN_SUMMER_ABI = json.load(file)
+
 NFTS2ME_CONTRACTS_PATH = 'data/nfts2me_contracts.json'
 
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
@@ -221,13 +225,17 @@ RUBYSCORE_CONTRACT = "0xe10add2ad591a7ac3ca46788a06290de017b9fb4"
 
 EIP_4844_CONTRACT = "0x273cA93A52b817294830eD7572aA591Ccfa647fd"
 
+ONCHAIN_SUMMER_CONTRACT = "0x768E7151500bB5120983d9619374F31DD71D8357"
+
 #################################################################
 #                      BASESCAN API                             #
 #################################################################
 
 BASESCAN_URL = 'https://api.basescan.org/api'
 
-BASESCAN_API_KEY = ''
+BASE_API_KEYS = ['']
+
+ETHERSCAN_API_KEYS = ['']  # api from https://etherscan.io/ ['api_key1', 'api_key2']
 
 CHAINS_OKX = {
     'linea': 'Linea',

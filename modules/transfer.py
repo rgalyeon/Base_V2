@@ -111,4 +111,5 @@ class Transfer(Account):
             await self.bridge_logic(source_chain, destination_chain, amount_wei, amount, balance)
             if not bridge_from_all_chains:
                 break
-            await sleep(*sleep_between_transfers)
+            await sleep(*sleep_between_transfers,
+                        message=f"[{self.account_id}][{self.address}] Sleep before next transfer")
