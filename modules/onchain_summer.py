@@ -20,10 +20,10 @@ class OnchainSummer(Account):
         price_per_token = 200000000000000
         allowlist_proof = {'quantityLimitPerWallet': 2 ** 256 - 1,
                            'pricePerToken': price_per_token,
-                           'currency': currency}
+                           'currency': currency,
+                           'proof': []}
         quantity = 1
-
-        n_nfts = await contract.functions.balanceOf(self.address, 0).call()
+        n_nfts = await contract.functions.balanceOf(self.address).call()
         if n_nfts < 1:
             tx_data = await self.get_tx_data(value=price_per_token)
 
