@@ -36,3 +36,6 @@ from .mint_unlooped import Unlooped
 from .rubyscore import Rubyscore
 from .mint_eip4844 import EIP4844
 from .onchain_summer import OnchainSummer
+from .sound_xyz import SoundXyz
+from .based_summer_nft import BasedSummer
+from .base_era_mint import BaseEra

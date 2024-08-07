@@ -120,6 +120,15 @@ with open('data/abi/eip4844_nft/abi.json', 'r') as file:
 with open('data/abi/onchain_summer/abi.json', 'r') as file:
     ONCHAIN_SUMMER_ABI = json.load(file)
 
+with open('data/abi/soundxyz/abi.json', 'r') as file:
+    SOUND_XYZ_ABI = json.load(file)
+
+with open('data/abi/soundxyz/nfts_abi.json', 'r') as file:
+    SOUND_XYZ_NFT_ABI = json.load(file)
+
+with open('data/abi/onchain_summer/opensea.json', 'r') as file:
+    OPENSEA_ABI = json.load(file)
+
 NFTS2ME_CONTRACTS_PATH = 'data/nfts2me_contracts.json'
 
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
@@ -226,6 +235,9 @@ RUBYSCORE_CONTRACT = "0xe10add2ad591a7ac3ca46788a06290de017b9fb4"
 EIP_4844_CONTRACT = "0x273cA93A52b817294830eD7572aA591Ccfa647fd"
 
 ONCHAIN_SUMMER_CONTRACT = "0x768E7151500bB5120983d9619374F31DD71D8357"
+
+SOUND_XYZ_CONTRACT = "0x000000000001a36777f9930aaeff623771b13e70"
+
 
 #################################################################
 #                      BASESCAN API                             #

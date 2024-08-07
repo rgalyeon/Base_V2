@@ -791,6 +791,69 @@ async def unlooped_mint(wallet_info):
     await unlooped_inst.mint(contract)
 
 
+async def sound_xyz_mint(wallet_info):
+    """
+    Mint free nft (platform commission 0.000777 eth) on sound.xyz
+    ______________________________________________________
+    referral - wallet address of referral
+    contracts - address of nft (soundtrack) and track edition in format ('address', 0 or 1)
+                1 - Limited Edition, 0 - Free Edition; check info on website
+    """
+
+    referral = ""
+
+    contracts = [
+        ('0xf57FdEf4cBf30F7d47F578d313a181141C91c1E9', 1),  # INTRO
+        ('0x68733a0fc8dEa32535A249cbFccd6Ae0329ce998', 0),  # Back Online (ft. Pluko x Biicla x EVAN GIIA)
+        ('0x6ff2f9c5a59Adc4618617590A9DC77e5c9e4c68e', 0),  # anywhere but here
+    ]
+
+    sound_xyz_inst = SoundXyz(wallet_info)
+    await sound_xyz_inst.mint_sound(contracts, referral)
+
+
+async def mint_onchain_summer2_nfts(wallet_info):
+    """
+    Mint nft from Onchain Summer2 Campaign
+
+    comment line if you don't need some nft
+    ______________________________________________________
+    """
+
+    sleep_from = 30
+    sleep_to = 60
+
+    random_mint = True
+
+    nfts = [
+        'Celebrating the Ethereum ETF',  # 0.0001 eth
+        'ETFEREUM',  # 0.0001 eth
+        'ETH BREAKING THROUGH',  # 0.0001 eth
+        'Ethereum ETF',  # 0.0001 eth
+        "ETH can't be stopped",  # 0.0001 eth
+        'Happy Birthday Toshi',  # 0.0001 eth
+        'EURC & Base Launch'  # 0.0001 eth
+    ]
+
+    os_inst = OnchainSummer(wallet_info)
+    await os_inst.mint_all_nft(sleep_from, sleep_to, random_mint, nfts)
+
+
+async def claim_all_badges(wallet_info):
+    """
+    Claim badges Onchain Summer 2 Campaign
+    ______________________________________________________
+    """
+
+    sleep_from = 30
+    sleep_to = 60
+
+    random_mint = True
+
+    os_inst = OnchainSummer(wallet_info)
+    await os_inst.claim_all_badges(sleep_from, sleep_to, random_mint)
+
+
 async def custom_routes(wallet_info):
     """
     BRIDGE:
@@ -833,6 +896,10 @@ async def custom_routes(wallet_info):
         – mint_nft
     BASE NFTS:
         - mint_onchain_summer_is_back_nft
+    ONCHAIN_SUMMER2:
+        - claim_all_badges
+        - mint_onchain_summer2_nfts
+
 
     If random_module = True and withdraw_okx in use_modules, withdraw_okx will always be executed first and
                        transfer_to_okx will be executed last
@@ -964,6 +1031,16 @@ async def mint_eip4844(wallet_info):
 async def mint_onchain_summer_is_back_nft(wallet_info):
     onchain_summer_inst = OnchainSummer(wallet_info)
     await onchain_summer_inst.mint_onchain_summer_is_back()
+
+
+async def mint_based_summer_nft(wallet_info):
+    nft = BasedSummer(wallet_info)
+    await nft.mint()
+
+
+async def mint_base_era_nft(wallet_info):
+    nft = BaseEra(wallet_info)
+    await nft.mint()
 
 
 def get_tx_count():
