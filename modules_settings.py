@@ -832,7 +832,23 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'Ethereum ETF',  # 0.0001 eth
         "ETH can't be stopped",  # 0.0001 eth
         'Happy Birthday Toshi',  # 0.0001 eth
-        'EURC & Base Launch'  # 0.0001 eth
+        'EURC & Base Launch',  # 0.0001 eth
+        'Introducing: Coinbase Wallet web app',  # 0.0001 eth
+        'Mister Miggles',
+        'Team Liquid Onchain Summer Premiere Series',
+        'Nouns Forever (Song A Day #5700)',
+        'the world after ETH ETF approval',
+        #'Adventure Begins',  # 0.00042 eth
+        'Nouns everywhere ⌐◨-◨',
+        'Happy 3rd Nouniversary',
+        'Happy Nouniversary',
+        'Celebrating the end of Nouns: Season 3',
+        'Celebrating Nouns',  # claim doesn't work on website
+        'Nounish Vibe',
+        'Hand of Nouns',
+        'Happy Nouniversary from based Nouns!',
+        'Base God and Miggs wif Nouns',
+        'nounify the rockies'
     ]
 
     os_inst = OnchainSummer(wallet_info)
@@ -899,6 +915,7 @@ async def custom_routes(wallet_info):
     ONCHAIN_SUMMER2:
         - claim_all_badges
         - mint_onchain_summer2_nfts
+        - spin_the_wheel
 
 
     If random_module = True and withdraw_okx in use_modules, withdraw_okx will always be executed first and
@@ -1041,6 +1058,11 @@ async def mint_based_summer_nft(wallet_info):
 async def mint_base_era_nft(wallet_info):
     nft = BaseEra(wallet_info)
     await nft.mint()
+
+
+async def spin_the_wheel(wallet_info):
+    os_inst = OnchainSummer(wallet_info)
+    await os_inst.spin_the_wheel()
 
 
 def get_tx_count():

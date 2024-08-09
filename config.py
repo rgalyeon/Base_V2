@@ -129,6 +129,9 @@ with open('data/abi/soundxyz/nfts_abi.json', 'r') as file:
 with open('data/abi/onchain_summer/opensea.json', 'r') as file:
     OPENSEA_ABI = json.load(file)
 
+with open('data/abi/onchain_summer/introducing.json', 'r') as file:
+    INTRODUCING_ABI = json.load(file)
+
 NFTS2ME_CONTRACTS_PATH = 'data/nfts2me_contracts.json'
 
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
