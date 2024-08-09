@@ -335,9 +335,9 @@ class OnchainSummer(Account):
             async with session.get(url, headers=self.headers, proxy=self.proxy, params=data) as response:
                 if response.status in (200, 201):
                     response_data = await response.json()
-                    print(response_data)
                 else:
-                    print(await response.text())
+                    logger.error(f"[{self.account_id}][{self.address}] Bad response {await response.text()}")
+                    raise ValueError('Bad response')
 
         is_available = response_data['spinData']['hasAvailableSpin']
         return is_available
