@@ -848,7 +848,9 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'Hand of Nouns',
         'Happy Nouniversary from based Nouns!',
         'Base God and Miggs wif Nouns',
-        'nounify the rockies'
+        'nounify the rockies',
+        'Dawn of Daylight',
+        'Coffee Days 2024'
     ]
 
     os_inst = OnchainSummer(wallet_info)
@@ -1076,6 +1078,5 @@ def start_encrypt():
 def progress_check(wallets_data):
 
     replace = True
-    check_eth = True
 
-    Scan(wallets_data).get_wallet_progress(replace, check_eth=check_eth)
+    Scan(wallets_data).get_wallet_progress(replace)

@@ -1,8 +1,8 @@
 import random
-
+import warnings
 from loguru import logger
 
-from config import ETHERSCAN_API_KEYS, PROGRESS_PATH
+from config import BASESCAN_URL, BASE_API_KEYS, PROGRESS_PATH
 import requests
 from typing import List, Dict
 import pandas as pd
@@ -10,15 +10,16 @@ from tqdm import tqdm
 import time
 import os
 
+warnings.filterwarnings('ignore')
+
 
 class Scan:
     def __init__(self, wallets_data):
         self.wallets_data = wallets_data
-        self.etherscan_url = 'https://api.etherscan.io/api'
 
     def url_maker(self, module, action, scan_url, **kwargs) -> str:
 
-        api_keys = ETHERSCAN_API_KEYS
+        api_keys = BASE_API_KEYS
 
         url = scan_url + f'?module={module}' \
                          f'&action={action}' \
@@ -40,15 +41,58 @@ class Scan:
         res = resp.json()
         return res
 
-    def parse_transactions(self, transactions: List[Dict], wallet, df: pd.DataFrame, scan_url):
+    def parse_transactions(self, transactions: List[Dict], wallet, df: pd.DataFrame):
         df.loc[wallet, :] = False
 
-        bridge_volume = 0
-        if scan_url == self.etherscan_url:
-            for tx in transactions:
-                if tx['to'] == '0x49048044d57e1c92a77f79988d21fa8faf74e97e' and tx['methodId'] == '0xe9e05c42':
-                    bridge_volume += int(tx['value'])
-        df.loc[wallet, 'native_bridge_deposit'] = bridge_volume / 10 ** 18
+        for tx in transactions:
+            if tx['to'] == '0xb5408b7126142C61f509046868B1273F96191b6d'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Celebrating the Ethereum ETF'] = True
+            elif tx['to'] == '0xE8aD8b2c5Ec79d4735026f95Ba7C10DCB0D3732B'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'ETFEREUM'] = True
+            elif tx['to'] == '0x96E82d88c07eCa6a29B2AD86623397B689380652'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'ETH BREAKING THROUGH'] = True
+            elif tx['to'] == '0xC00F7096357f09d9f5FE335CFD15065326229F66'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Ethereum ETF'] = True
+            elif tx['to'] == '0xb0FF351AD7b538452306d74fB7767EC019Fa10CF'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "ETH can't be stopped"] = True
+            elif tx['to'] == '0xE65dFa5C8B531544b5Ae4960AE0345456D87A47D'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Happy Birthday Toshi'] = True
+            elif tx['to'] == '0x615194d9695d0c02Fc30a897F8dA92E17403D61B'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'EURC & Base Launch'] = True
+            elif tx['to'] == '0x6B033e8199ce2E924813568B716378aA440F4C67'.lower():
+                df.loc[wallet, 'Introducing: Coinbase Wallet web app'] = True
+            elif tx['to'] == '0xcF74F48B71f2A8160aDa67D1720ce0F2778b5a28'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Nouns Forever (Song A Day #5700)'] = True
+            elif tx['to'] == '0x955FdFdFd783C89Beb54c85f0a97F0904D85B86C'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'the world after ETH ETF approval'] = True
+            elif tx['to'] == '0x63197bb4dE33DA81FdB311Ef6395237fB0F65C7D'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Nouns everywhere ⌐◨-◨'] = True
+            elif tx['to'] == '0xae954896B4d3B113C9FCe85f64387229291fb5a9'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Happy 3rd Nouniversary'] = True
+            elif tx['to'] == '0xE0fE6DD851187c62a79D00a211953Fe3B5Cec7FE'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Happy Nouniversary'] = True
+            elif tx['to'] == '0x7B28d9Efa325225666Aa6ddaC20c46420cd75871'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Celebrating the end of Nouns: Season 3'] = True
+            elif tx['to'] == '0x5680eAD37A60604a12F821Bb9Da42858cbC346Fd'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Celebrating Nouns'] = True
+            elif tx['to'] == '0xCcbb9DC3FeCAf7a9cAe716eF1C16C8ca2f19a3D1'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Nounish Vibe'] = True
+            elif tx['to'] == '0x250d4678a1175113eC96e7DeB90584267026D443'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Hand of Nouns'] = True
+            elif tx['to'] == '0x6414A4359848d2BF12B93483cd8A6ef6B03779ae'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Happy Nouniversary from based Nouns!'] = True
+            elif tx['to'] == '0x25F98e990B6C0dBa5A109B92542F16DCbbD017C8'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Base God and Miggs wif Nouns'] = True
+            elif tx['to'] == '0x306671092213C4d0da1a7bB5c31D5B4F9aB62246'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'nounify the rockies'] = True
+            elif tx['to'] == '0xf16755b43eE1a458161f0faE5a9124729f4f6B1B'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Coffee Days 2024'] = True
+            elif tx['to'] == '0x1aeD60A97192157fDA7fb26267A439d523d09c5e'.lower() and 'Dc03a75F96f38615B3eB55F0F289d36E7A706660'.lower() in tx['input']:
+                df.loc[wallet, 'Mister Miggles'] = True
+            elif tx['to'] == '0x1aeD60A97192157fDA7fb26267A439d523d09c5e'.lower() and '1b9ac8580d2e81d7322f163362831448e7fcad1b'.lower() in tx['input']:
+                df.loc[wallet, 'Team Liquid Onchain Summer Premiere Series'] = True
+            elif tx['to'] == '0x1aeD60A97192157fDA7fb26267A439d523d09c5e'.lower() and '31B81650997e26Eb527CA6541B1433d1EF348d93'.lower() in tx['input']:
+                df.loc[wallet, 'Dawn of Daylight'] = True
 
     def wait_transactions(self, address, all_proxies, scan_url):
         n_attemps = 10
@@ -61,32 +105,33 @@ class Scan:
             n_attemps -= 1
             time.sleep(5)
 
-    def get_wallet_progress(self, replace=False, check_eth=True):
+    def get_wallet_progress(self, replace=False):
         if os.path.exists(PROGRESS_PATH) and not replace:
             logger.info(f'Load progress from {PROGRESS_PATH}')
             return
         logger.info('Check progress from blockchain data')
 
-        cols = ['native_bridge_deposit']
-
-        scanners = [self.etherscan_url]
-        if check_eth:
-            pass
-            # scanners.append(self.etherscan_url)
+        cols = ['Celebrating the Ethereum ETF', 'ETFEREUM', 'ETH BREAKING THROUGH',
+                'Ethereum ETF', "ETH can't be stopped", 'Happy Birthday Toshi', 'EURC & Base Launch',
+                'Introducing: Coinbase Wallet web app', 'Mister Miggles', 'Team Liquid Onchain Summer Premiere Series',
+                'Nouns Forever (Song A Day #5700)', 'the world after ETH ETF approval', 'Nouns everywhere ⌐◨-◨',
+                'Happy 3rd Nouniversary', 'Happy Nouniversary', 'Celebrating the end of Nouns: Season 3',
+                'Happy Nouniversary', 'Celebrating the end of Nouns: Season 3', 'Celebrating Nouns', 'Nounish Vibe',
+                'Hand of Nouns', 'Happy Nouniversary from based Nouns!', 'Base God and Miggs wif Nouns',
+                'nounify the rockies', 'Coffee Days 2024', 'Dawn of Daylight']
 
         df = pd.DataFrame(columns=cols)
         all_proxies = [wallet_info['proxy'] for wallet_info in self.wallets_data]
         for wallet_info in tqdm(self.wallets_data):
             address = wallet_info['address'].lower()
-            for scan_url in scanners:
-                transactions = self.get_transaction_list(wallet_info, all_proxies, scan_url)
-                try:
-                    if transactions['status'] == '1':
-                        self.parse_transactions(transactions['result'][:100], wallet_info['address'], df, scan_url)
-                    else:
-                        print(transactions)
-                except Exception as e:
-                    logger.warning(f'Can not parse {address} wallet. Error: {e}')
+            transactions = self.get_transaction_list(wallet_info, all_proxies, BASESCAN_URL)
+            try:
+                if transactions['status'] == '1':
+                    self.parse_transactions(transactions['result'][:100], wallet_info['address'], df)
+                else:
+                    print(transactions)
+            except Exception as e:
+                logger.warning(f'Can not parse {address} wallet. Error: {e}')
         df.fillna(False).to_excel(PROGRESS_PATH)
 
     def get_transaction_list(self, wallet_info, all_proxies, scan_url):
