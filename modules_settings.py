@@ -851,6 +851,7 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'nounify the rockies',
         'Dawn of Daylight',
         'Coffee Days 2024'
+        'STIX Launch Tournament Pass'
     ]
 
     os_inst = OnchainSummer(wallet_info)

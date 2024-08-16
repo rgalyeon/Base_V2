@@ -93,6 +93,8 @@ class Scan:
                 df.loc[wallet, 'Team Liquid Onchain Summer Premiere Series'] = True
             elif tx['to'] == '0x1aeD60A97192157fDA7fb26267A439d523d09c5e'.lower() and '31B81650997e26Eb527CA6541B1433d1EF348d93'.lower() in tx['input']:
                 df.loc[wallet, 'Dawn of Daylight'] = True
+            elif tx['to'] == '0xa7891c87933BB99Db006b60D8Cb7cf68141B492f'.lower() and tx['methodId'] == '0x84bb1e42':
+                df.loc[wallet, 'STIX Launch Tournament Pass'] = True
 
     def wait_transactions(self, address, all_proxies, scan_url):
         n_attemps = 10
@@ -118,7 +120,7 @@ class Scan:
                 'Happy 3rd Nouniversary', 'Happy Nouniversary', 'Celebrating the end of Nouns: Season 3',
                 'Happy Nouniversary', 'Celebrating the end of Nouns: Season 3', 'Celebrating Nouns', 'Nounish Vibe',
                 'Hand of Nouns', 'Happy Nouniversary from based Nouns!', 'Base God and Miggs wif Nouns',
-                'nounify the rockies', 'Coffee Days 2024', 'Dawn of Daylight']
+                'nounify the rockies', 'Coffee Days 2024', 'Dawn of Daylight', 'STIX Launch Tournament Pass']
 
         df = pd.DataFrame(columns=cols)
         all_proxies = [wallet_info['proxy'] for wallet_info in self.wallets_data]

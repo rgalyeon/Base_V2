@@ -2,8 +2,9 @@ import json
 import random
 
 import aiohttp
+import web3
 from loguru import logger
-from config import ONCHAIN_SUMMER_ABI, ONCHAIN_SUMMER_CONTRACT, INTRODUCING_ABI, COINEARNINGS_ABI
+from config import ONCHAIN_SUMMER_ABI, ONCHAIN_SUMMER_CONTRACT, INTRODUCING_ABI, COINEARNINGS_ABI, ZERO_ADDRESS
 from utils.gas_checker import check_gas
 from utils.helpers import retry, sleep
 from .account import Account
@@ -16,6 +17,7 @@ class MintType(Enum):
     RESERVOIR = 2
     ADVENTURE = 3
     INTRODUCING = 4
+    STIX = 5
 
 
 class OnchainSummer(Account):
@@ -69,7 +71,8 @@ class OnchainSummer(Account):
             ('Happy Nouniversary from based Nouns!', '0x6414A4359848d2BF12B93483cd8A6ef6B03779ae', '71QheN8IVzfyoVtE8oeHNU', MintType.COMMENT),
             ('Base God and Miggs wif Nouns', '0x25F98e990B6C0dBa5A109B92542F16DCbbD017C8', '1eeRIVPiOVBJ3rlM5sGnpx', MintType.COMMENT),
             ('nounify the rockies', '0x306671092213C4d0da1a7bB5c31D5B4F9aB62246', '21pui4pvJ0h6YA8EAlvjqh', MintType.COMMENT),
-            ('Coffee Days 2024', '0xf16755b43eE1a458161f0faE5a9124729f4f6B1B', 'ocsChallenge_9142cba1-ec12-4ee8-915e-7976536908cd', MintType.COMMENT)
+            ('Coffee Days 2024', '0xf16755b43eE1a458161f0faE5a9124729f4f6B1B', 'ocsChallenge_9142cba1-ec12-4ee8-915e-7976536908cd', MintType.COMMENT),
+            ('STIX Launch Tournament Pass', '0xa7891c87933BB99Db006b60D8Cb7cf68141B492f', 'ocsChallenge_bd5208b5-ff1e-4f5b-8522-c4d4ebb795b7', MintType.STIX)
         ]
 
         self.badges = [
@@ -298,6 +301,38 @@ class OnchainSummer(Account):
         else:
             logger.info(f"[{self.account_id}][{self.address}] Already minted")
 
+    @retry
+    @check_gas
+    async def mint_stix(self, nft_name, nft_contract):
+        logger.info(f"[{self.account_id}][{self.address}] Mint {nft_name} nft")
+
+        contract = self.get_contract(nft_contract, ONCHAIN_SUMMER_ABI)
+        n_nfts = await contract.functions.balanceOf(self.address).call()
+
+        currency = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+
+        if n_nfts < 1:
+            tx_data = await self.get_tx_data()
+
+            transaction = await contract.functions.claim(
+                self.address,
+                1,
+                currency,
+                0,
+                {'proof': [self.w3.to_bytes(hexstr=f'0x{"0" * 64}')],
+                 'quantityLimitPerWallet': 1,
+                 'pricePerToken': 0,
+                 'currency': currency
+                 },
+                "0x"
+            ).build_transaction(tx_data)
+
+            signed_txn = await self.sign(transaction)
+            txn_hash = await self.send_raw_transaction(signed_txn)
+            await self.wait_until_tx_finished(txn_hash.hex())
+        else:
+            logger.info(f"[{self.account_id}][{self.address}] Already minted")
+
     async def mint_all_nft(self, sleep_from, sleep_to, random_mint, nfts_for_mint):
 
         nfts = self.os_nfts2.copy()
@@ -316,6 +351,8 @@ class OnchainSummer(Account):
                 await self.mint_adventure(nft_name, nft_contract)
             elif mint_type == MintType.INTRODUCING:
                 await self.mint_introducing_coinbase_wallet_nft(nft_name, nft_contract)
+            elif mint_type == MintType.STIX:
+                await self.mint_stix(nft_name, nft_contract)
             await self.claim_task(nft_name, challenge_id)
             await sleep(sleep_from, sleep_to, 'Sleep before next mint')
 
