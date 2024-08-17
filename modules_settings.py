@@ -853,7 +853,11 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'Coffee Days 2024',
         'STIX Launch Tournament Pass',
         'strut 001',
-        'Nouniversary (Blue)'
+        'Nouniversary (Blue)',
+        'Toshi Onchain Summer',
+        'Base Canada',
+        'Butterfly',
+        'THINK BIG'
     ]
 
     os_inst = OnchainSummer(wallet_info)
