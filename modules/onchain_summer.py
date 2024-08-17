@@ -72,7 +72,13 @@ class OnchainSummer(Account):
             ('Base God and Miggs wif Nouns', '0x25F98e990B6C0dBa5A109B92542F16DCbbD017C8', '1eeRIVPiOVBJ3rlM5sGnpx', MintType.COMMENT),
             ('nounify the rockies', '0x306671092213C4d0da1a7bB5c31D5B4F9aB62246', '21pui4pvJ0h6YA8EAlvjqh', MintType.COMMENT),
             ('Coffee Days 2024', '0xf16755b43eE1a458161f0faE5a9124729f4f6B1B', 'ocsChallenge_9142cba1-ec12-4ee8-915e-7976536908cd', MintType.COMMENT),
-            ('STIX Launch Tournament Pass', '0xa7891c87933BB99Db006b60D8Cb7cf68141B492f', 'ocsChallenge_bd5208b5-ff1e-4f5b-8522-c4d4ebb795b7', MintType.STIX)
+            ('STIX Launch Tournament Pass', '0xa7891c87933BB99Db006b60D8Cb7cf68141B492f', 'ocsChallenge_bd5208b5-ff1e-4f5b-8522-c4d4ebb795b7', MintType.STIX),
+            ('strut 001', '0x9FF8Fd82c0ce09caE76e777f47d536579AF2Fe7C', '5c3PqZ2EGVbzQ2CQXL1vWK', MintType.COMMENT),
+            ('Nouniversary (Blue)', '0xC8f93Ce7A12960466a2e13E70dE5CA41B652e4E6', 'ocsChallenge_578c4c33-4506-4604-8359-ac0b43a3809c', MintType.COMMENT),
+            ('Toshi Onchain Summer', '0x44d461Da8A451f05b6b75EdD5C4a2d2f3C14aaB4', '4g9y1NVvIxiOCSeGvPLmJS', MintType.COMMENT),
+            ('Base Canada', '0x7B791EdF061Df65bAC7a9d47668F61F1a9A998C0', '1BWyKWI2UZHnOEw8E4hpS5', MintType.COMMENT),
+            ('Butterfly', '0x3b4B32a5c9A01763A0945A8a4a4269052DC3DE2F', '6UuHdstl9MRFd4cgFf15kk', MintType.COMMENT),
+            ('THINK BIG', '0x752d593b3B8aD1c5d827F5B9AA9b653eE7134ea0', '3EOQYszODyvZvbQMoKPoDO', MintType.COMMENT)
         ]
 
         self.badges = [

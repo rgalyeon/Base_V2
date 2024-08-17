@@ -836,22 +836,24 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'Introducing: Coinbase Wallet web app',  # 0.0001 eth
         'Mister Miggles',
         'Team Liquid Onchain Summer Premiere Series',
-        'Nouns Forever (Song A Day #5700)',
+        # 'Nouns Forever (Song A Day #5700)',
         'the world after ETH ETF approval',
-        #'Adventure Begins',  # 0.00042 eth
+        # 'Adventure Begins',  # 0.00042 eth
         'Nouns everywhere ⌐◨-◨',
-        'Happy 3rd Nouniversary',
-        'Happy Nouniversary',
-        'Celebrating the end of Nouns: Season 3',
+        # 'Happy 3rd Nouniversary',
+        # 'Happy Nouniversary',
+        # 'Celebrating the end of Nouns: Season 3',
         'Celebrating Nouns',  # claim doesn't work on website
         'Nounish Vibe',
         'Hand of Nouns',
         'Happy Nouniversary from based Nouns!',
-        'Base God and Miggs wif Nouns',
-        'nounify the rockies',
+        # 'Base God and Miggs wif Nouns',
+        # 'nounify the rockies',
         'Dawn of Daylight',
-        'Coffee Days 2024'
-        'STIX Launch Tournament Pass'
+        'Coffee Days 2024',
+        'STIX Launch Tournament Pass',
+        'strut 001',
+        'Nouniversary (Blue)'
     ]
 
     os_inst = OnchainSummer(wallet_info)
