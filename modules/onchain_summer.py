@@ -78,7 +78,8 @@ class OnchainSummer(Account):
             ('Toshi Onchain Summer', '0x44d461Da8A451f05b6b75EdD5C4a2d2f3C14aaB4', '4g9y1NVvIxiOCSeGvPLmJS', MintType.COMMENT),
             ('Base Canada', '0x7B791EdF061Df65bAC7a9d47668F61F1a9A998C0', '1BWyKWI2UZHnOEw8E4hpS5', MintType.COMMENT),
             ('Butterfly', '0x3b4B32a5c9A01763A0945A8a4a4269052DC3DE2F', '6UuHdstl9MRFd4cgFf15kk', MintType.COMMENT),
-            ('THINK BIG', '0x752d593b3B8aD1c5d827F5B9AA9b653eE7134ea0', '3EOQYszODyvZvbQMoKPoDO', MintType.COMMENT)
+            ('THINK BIG', '0x752d593b3B8aD1c5d827F5B9AA9b653eE7134ea0', '3EOQYszODyvZvbQMoKPoDO', MintType.COMMENT),
+            ('Toshi Chess', '0xd60f13cC3e4d5bC96e7bAE8AAb5F448f3eFF3F0C', '1HMONONDaMukjieAOD3PHQ', MintType.COMMENT)
         ]
 
         self.badges = [
