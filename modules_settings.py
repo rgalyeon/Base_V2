@@ -858,7 +858,8 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'Base Canada',
         'Butterfly',
         'THINK BIG',
-        'Toshi Chess'
+        'Toshi Chess',
+        'Toshi Vibe'
     ]
 
     os_inst = OnchainSummer(wallet_info)
