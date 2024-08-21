@@ -111,6 +111,8 @@ class Scan:
                 df.loc[wallet, 'Toshi Chess'] = True
             elif tx['to'] == '0xbFa3fF9dcdB811037Bbec89f89E2751114ECD299'.lower() and tx['methodId'] == '0x574fed17':
                 df.loc[wallet, 'Toshi Vibe'] = True
+            elif tx['to'] == '0x5307c5ee9AeE0B944fA2E0Dba5D35D1D454E4bcE'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Whatchu Lookin' At?"] = True
 
     def wait_transactions(self, address, all_proxies, scan_url):
         n_attemps = 10
@@ -136,7 +138,7 @@ class Scan:
                 'Celebrating Nouns', 'Nounish Vibe', 'Hand of Nouns', 'Happy Nouniversary from based Nouns!',
                 'Coffee Days 2024', 'Dawn of Daylight', 'STIX Launch Tournament Pass',
                 'strut 001', 'Nouniversary (Blue)', 'Toshi Onchain Summer', 'Base Canada', 'Butterfly', 'THINK BIG',
-                'Toshi Chess', 'Toshi Vibe']
+                'Toshi Chess', 'Toshi Vibe', "Whatchu Lookin' At?"]
 
         df = pd.DataFrame(columns=cols)
         all_proxies = [wallet_info['proxy'] for wallet_info in self.wallets_data]
