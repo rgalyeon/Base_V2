@@ -81,7 +81,11 @@ class OnchainSummer(Account):
             ('THINK BIG', '0x752d593b3B8aD1c5d827F5B9AA9b653eE7134ea0', '3EOQYszODyvZvbQMoKPoDO', MintType.COMMENT),
             ('Toshi Chess', '0xd60f13cC3e4d5bC96e7bAE8AAb5F448f3eFF3F0C', '1HMONONDaMukjieAOD3PHQ', MintType.COMMENT),
             ('Toshi Vibe', '0xbFa3fF9dcdB811037Bbec89f89E2751114ECD299', '3WE9nylUC2bMHz9c6hxFnL', MintType.COMMENT),
-            ("Whatchu Lookin' At?", '0x5307c5ee9AeE0B944fA2E0Dba5D35D1D454E4bcE', '39XYCR1jsdPwnoFEpwCwhD', MintType.COMMENT)
+            ("Whatchu Lookin' At?", '0x5307c5ee9AeE0B944fA2E0Dba5D35D1D454E4bcE', '39XYCR1jsdPwnoFEpwCwhD', MintType.COMMENT),
+            ('Stand with Crypto folk rock', '0x2382456097cC12ce54052084e9357612497FD6be', '5Hyw2HMBfOBFDvCBkvdVmX', MintType.COMMENT),
+            ('Endaoment X SWC Shield', '0x4e4431BDdC2a896b1268ded02807b78c318C82e0', '359X8U2xzQmVIQRe7xSFk9', MintType.COMMENT),
+            ('Stand with Crypto', '0x146B627a763DFaE78f6A409CEF5B8ad84dDD4150', '3ofLIMuInVt5sKkQOtLWp0', MintType.COMMENT)
+
         ]
 
         self.badges = [
@@ -153,6 +157,8 @@ class OnchainSummer(Account):
             await self.wait_until_tx_finished(txn_hash.hex())
         else:
             logger.info(f"[{self.account_id}][{self.address}] Already minted")
+            return True
+        return False
 
     @retry
     async def claim_task(self, nft_name, challendge_id):
@@ -254,6 +260,8 @@ class OnchainSummer(Account):
             await self.wait_until_tx_finished(txn_hash.hex())
         else:
             logger.info(f"[{self.account_id}][{self.address}] Already minted")
+            return True
+        return False
 
     @retry
     @check_gas
@@ -286,6 +294,8 @@ class OnchainSummer(Account):
             await self.wait_until_tx_finished(txn_hash.hex())
         else:
             logger.info(f"[{self.account_id}][{self.address}] Already minted")
+            return True
+        return False
 
     async def mint_adventure(self, nft_name, nft_contract):
         logger.info(f"[{self.account_id}][{self.address}] Mint {nft_name} nft")
@@ -309,6 +319,8 @@ class OnchainSummer(Account):
             await self.wait_until_tx_finished(txn_hash.hex())
         else:
             logger.info(f"[{self.account_id}][{self.address}] Already minted")
+            return True
+        return False
 
     @retry
     @check_gas
@@ -341,6 +353,8 @@ class OnchainSummer(Account):
             await self.wait_until_tx_finished(txn_hash.hex())
         else:
             logger.info(f"[{self.account_id}][{self.address}] Already minted")
+            return True
+        return False
 
     async def mint_all_nft(self, sleep_from, sleep_to, random_mint, nfts_for_mint):
 
@@ -351,19 +365,22 @@ class OnchainSummer(Account):
         if random_mint:
             random.shuffle(nfts)
 
+        is_minted = False
+
         for nft_name, nft_contract, challenge_id, mint_type in nfts:
             if mint_type == MintType.COMMENT:
-                await self.mint_nft(nft_name, nft_contract)
+                is_minted = await self.mint_nft(nft_name, nft_contract)
             elif mint_type == MintType.RESERVOIR:
-                await self.mint_reservoir_nfts(nft_name, nft_contract)
+                is_minted = await self.mint_reservoir_nfts(nft_name, nft_contract)
             elif mint_type == MintType.ADVENTURE:
-                await self.mint_adventure(nft_name, nft_contract)
+                is_minted = await self.mint_adventure(nft_name, nft_contract)
             elif mint_type == MintType.INTRODUCING:
-                await self.mint_introducing_coinbase_wallet_nft(nft_name, nft_contract)
+                is_minted = await self.mint_introducing_coinbase_wallet_nft(nft_name, nft_contract)
             elif mint_type == MintType.STIX:
-                await self.mint_stix(nft_name, nft_contract)
+                is_minted = await self.mint_stix(nft_name, nft_contract)
             await self.claim_task(nft_name, challenge_id)
-            await sleep(sleep_from, sleep_to, 'Sleep before next mint')
+            if not is_minted:
+                await sleep(sleep_from, sleep_to, 'Sleep before next mint')
 
     async def check_available_spin(self):
         data = {

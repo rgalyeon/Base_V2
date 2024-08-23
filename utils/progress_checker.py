@@ -113,6 +113,12 @@ class Scan:
                 df.loc[wallet, 'Toshi Vibe'] = True
             elif tx['to'] == '0x5307c5ee9AeE0B944fA2E0Dba5D35D1D454E4bcE'.lower() and tx['methodId'] == '0x574fed17':
                 df.loc[wallet, "Whatchu Lookin' At?"] = True
+            elif tx['to'] == '0x2382456097cC12ce54052084e9357612497FD6be'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Stand with Crypto folk rock"] = True
+            elif tx['to'] == '0x4e4431BDdC2a896b1268ded02807b78c318C82e0'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Endaoment X SWC Shield"] = True
+            elif tx['to'] == '0x146B627a763DFaE78f6A409CEF5B8ad84dDD4150'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Stand with Crypto"] = True
 
     def wait_transactions(self, address, all_proxies, scan_url):
         n_attemps = 10
@@ -138,7 +144,8 @@ class Scan:
                 'Celebrating Nouns', 'Nounish Vibe', 'Hand of Nouns', 'Happy Nouniversary from based Nouns!',
                 'Coffee Days 2024', 'Dawn of Daylight', 'STIX Launch Tournament Pass',
                 'strut 001', 'Nouniversary (Blue)', 'Toshi Onchain Summer', 'Base Canada', 'Butterfly', 'THINK BIG',
-                'Toshi Chess', 'Toshi Vibe', "Whatchu Lookin' At?"]
+                'Toshi Chess', 'Toshi Vibe', "Whatchu Lookin' At?",
+                'Stand with Crypto folk rock', 'Endaoment X SWC Shield', 'Stand with Crypto']
 
         df = pd.DataFrame(columns=cols)
         all_proxies = [wallet_info['proxy'] for wallet_info in self.wallets_data]
