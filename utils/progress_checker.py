@@ -1,3 +1,4 @@
+import json
 import random
 import warnings
 from loguru import logger
@@ -31,14 +32,21 @@ class Scan:
 
     def get_wallet_transactions(self, address, scan_url, proxies=None):
         url = self.url_maker('account', 'txlist', scan_url, address=address)
-        if proxies:
+        n_tries = 5
+        while n_tries:
             try:
-                resp = requests.get(url, proxies=proxies, timeout=10)
-            except:
-                resp = requests.get(url)
-        else:
-            resp = requests.get(url)
-        res = resp.json()
+                if proxies:
+                    try:
+                        resp = requests.get(url, proxies=proxies, timeout=10)
+                    except:
+                        resp = requests.get(url)
+                else:
+                    resp = requests.get(url)
+                res = resp.json()
+                break
+            except json.JSONDecodeError:
+                n_tries -= 1
+                time.sleep(1)
         return res
 
     def parse_transactions(self, transactions: List[Dict], wallet, df: pd.DataFrame):
