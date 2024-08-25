@@ -119,6 +119,12 @@ class Scan:
                 df.loc[wallet, "Endaoment X SWC Shield"] = True
             elif tx['to'] == '0x146B627a763DFaE78f6A409CEF5B8ad84dDD4150'.lower() and tx['methodId'] == '0x574fed17':
                 df.loc[wallet, "Stand with Crypto"] = True
+            elif tx['to'] == '0xea50e58B518435AD2CeCE84d1e099b2e0878B9cF'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Yellow Collective Shield Trait"] = True
+            elif tx['to'] == '0x651b0A2b9FB9C186fB6C9a9CEddf25B791Ad5753'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Crypto will bloom"] = True
+            elif tx['to'] == '0x4beAdC00E2A6b6C4fAc1a43FF340E5D71CBB9F77'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Stand with Crypto Pizza"] = True
 
     def wait_transactions(self, address, all_proxies, scan_url):
         n_attemps = 10
@@ -145,7 +151,8 @@ class Scan:
                 'Coffee Days 2024', 'Dawn of Daylight', 'STIX Launch Tournament Pass',
                 'strut 001', 'Nouniversary (Blue)', 'Toshi Onchain Summer', 'Base Canada', 'Butterfly', 'THINK BIG',
                 'Toshi Chess', 'Toshi Vibe', "Whatchu Lookin' At?",
-                'Stand with Crypto folk rock', 'Endaoment X SWC Shield', 'Stand with Crypto']
+                'Stand with Crypto folk rock', 'Endaoment X SWC Shield', 'Stand with Crypto',
+                'Yellow Collective Shield Trait', 'Crypto will bloom', 'Stand with Crypto Pizza']
 
         df = pd.DataFrame(columns=cols)
         all_proxies = [wallet_info['proxy'] for wallet_info in self.wallets_data]

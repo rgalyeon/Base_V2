@@ -84,8 +84,11 @@ class OnchainSummer(Account):
             ("Whatchu Lookin' At?", '0x5307c5ee9AeE0B944fA2E0Dba5D35D1D454E4bcE', '39XYCR1jsdPwnoFEpwCwhD', MintType.COMMENT),
             ('Stand with Crypto folk rock', '0x2382456097cC12ce54052084e9357612497FD6be', '5Hyw2HMBfOBFDvCBkvdVmX', MintType.COMMENT),
             ('Endaoment X SWC Shield', '0x4e4431BDdC2a896b1268ded02807b78c318C82e0', '359X8U2xzQmVIQRe7xSFk9', MintType.COMMENT),
-            ('Stand with Crypto', '0x146B627a763DFaE78f6A409CEF5B8ad84dDD4150', '3ofLIMuInVt5sKkQOtLWp0', MintType.COMMENT)
+            ('Stand with Crypto', '0x146B627a763DFaE78f6A409CEF5B8ad84dDD4150', '3ofLIMuInVt5sKkQOtLWp0', MintType.COMMENT),
 
+            ('Yellow Collective Shield Trait', '0xea50e58B518435AD2CeCE84d1e099b2e0878B9cF', '71fCEn2cIwqXqLE6wYxGl0', MintType.COMMENT),
+            ('Crypto will bloom', '0x651b0A2b9FB9C186fB6C9a9CEddf25B791Ad5753', 'S3DyUSaz6mYehsypyOqPD', MintType.COMMENT),
+            ('Stand with Crypto Pizza', '0x4beAdC00E2A6b6C4fAc1a43FF340E5D71CBB9F77', '1zbecUKJMKwyYoKOn2OV5n', MintType.COMMENT)
         ]
 
         self.badges = [

@@ -863,7 +863,10 @@ async def mint_onchain_summer2_nfts(wallet_info):
         "Whatchu Lookin' At?",
         'Stand with Crypto folk rock',
         'Endaoment X SWC Shield',
-        'Stand with Crypto'
+        'Stand with Crypto',
+        'Yellow Collective Shield Trait',
+        'Crypto will bloom',
+        'Stand with Crypto Pizza'
     ]
 
     os_inst = OnchainSummer(wallet_info)
