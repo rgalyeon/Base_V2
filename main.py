@@ -72,10 +72,12 @@ def get_module():
             Choice(f"{next(counter)}) Mint on Sound.xyz\n", sound_xyz_mint),
             Choice(f"{next(counter)}) Mint Onchain Summer2 NFTs", mint_onchain_summer2_nfts),
             Choice(f"{next(counter)}) Claim Onchain Summer2 badges", claim_all_badges),
+            Choice(f"{next(counter)}) Mint Base domain", mint_base_domain),
             Choice(f"{next(counter)}) Spin the wheel (Onchain Summer)\n", spin_the_wheel),
             Choice(f"{next(counter)}) Use custom routes", custom_routes),
             Choice(f"{next(counter)}) Use automatic routes", automatic_routes),
             Choice(f"{next(counter)}) Progress checker", progress_check),
+            Choice(f"{next(counter)}) Onchain Summer stats checker", onchain_summer_stats_check),
             Choice(f"{next(counter)}) Check transaction count", "tx_checker"),
             Choice(f"{next(counter)}) Exit", "exit"),
         ],
@@ -118,6 +120,9 @@ def main(module):
 
     if module == progress_check:
         return progress_check(wallets_data)
+
+    if module == onchain_summer_stats_check:
+        return onchain_summer_stats_check(wallets_data)
 
     if RANDOM_WALLET:
         random.shuffle(wallets_data)

@@ -3,7 +3,7 @@ import random
 import warnings
 from loguru import logger
 
-from config import BASESCAN_URL, BASE_API_KEYS, PROGRESS_PATH
+from config import BASESCAN_URL, BASE_API_KEYS, PROGRESS_PATH, ONCHAIN_SUMMER_SCORE_PATH
 import requests
 from typing import List, Dict
 import pandas as pd
@@ -187,3 +187,30 @@ class Scan:
             transactions = self.wait_transactions(address, all_proxies, scan_url)
 
         return transactions
+
+    def get_onchain_summer_stats(self):
+        logger.info('Start checking Onchain Summer Stats')
+
+        df = pd.DataFrame()
+
+        for wallet_info in tqdm(self.wallets_data):
+            address = wallet_info['address'].lower()
+            url = f'https://basehunt.xyz/api/profile/state?userAddress={address}&gameId=2'
+            try:
+                proxies = {'http': f'http://{wallet_info["proxy"]}', 'https': f'http://{wallet_info["proxy"]}'}
+                resp = requests.get(url, proxies=proxies, timeout=10)
+            except:
+                resp = requests.get(url)
+
+            results = resp.json()
+            if results['isOptedIn'] is True:
+                df.loc[address, 'n_quests'] = results['numChallengesCompleted']
+                df.loc[address, 'n_refs'] = results['referralData']['numReferrals']
+                df.loc[address, 'level'] = results['levelData']['currentLevel']['level']
+                df.loc[address, 'score'] = results['scoreData']['currentScore']
+                for badge in results['badges']:
+                    df.loc[address, f'{badge["name"]} badge'] = True
+
+        df.fillna(False, inplace=True)
+
+        df.to_excel(ONCHAIN_SUMMER_SCORE_PATH)

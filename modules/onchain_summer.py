@@ -4,12 +4,17 @@ import random
 import aiohttp
 import web3
 from loguru import logger
-from config import ONCHAIN_SUMMER_ABI, ONCHAIN_SUMMER_CONTRACT, INTRODUCING_ABI, COINEARNINGS_ABI, ZERO_ADDRESS
+from config import ONCHAIN_SUMMER_ABI, ONCHAIN_SUMMER_CONTRACT, INTRODUCING_ABI, COINEARNINGS_ABI, BASENAME_ABI
 from utils.gas_checker import check_gas
 from utils.helpers import retry, sleep
 from .account import Account
 from fake_useragent import UserAgent
 from enum import Enum
+from mimesis import Person
+from eth_utils import keccak
+from hexbytes import HexBytes
+from eth_utils import to_hex
+from eth_abi import encode
 
 
 class MintType(Enum):
@@ -21,7 +26,7 @@ class MintType(Enum):
 
 
 class OnchainSummer(Account):
-    def __init__(self, wallet_info) -> None:
+    def __init__(self, wallet_info, ref_code="") -> None:
         super().__init__(wallet_info=wallet_info, chain="base")
 
         ua = UserAgent().getRandom
@@ -103,6 +108,8 @@ class OnchainSummer(Account):
             ('TX100Badge', '9'),
             ('TX1000Badge', '10')
         ]
+
+        self.ref_code = ref_code
 
     @retry
     @check_gas
@@ -217,7 +224,7 @@ class OnchainSummer(Account):
                     raise ValueError('Error on claim')
 
     async def claim_all_badges(self, sleep_from, sleep_to, random_badge):
-
+        await self.login(self.ref_code)
         badges = self.badges.copy()
 
         if random_badge:
@@ -359,8 +366,8 @@ class OnchainSummer(Account):
             return True
         return False
 
-    async def mint_all_nft(self, sleep_from, sleep_to, random_mint, nfts_for_mint):
-
+    async def mint_all_nft(self, sleep_from, sleep_to, random_mint, nfts_for_mint, ref_code, only_claim):
+        await self.login(self.ref_code)
         nfts = self.os_nfts2.copy()
 
         nfts = [nft for nft in nfts if nft[0] in set(nfts_for_mint)]
@@ -371,19 +378,20 @@ class OnchainSummer(Account):
         is_minted = False
 
         for nft_name, nft_contract, challenge_id, mint_type in nfts:
-            if mint_type == MintType.COMMENT:
-                is_minted = await self.mint_nft(nft_name, nft_contract)
-            elif mint_type == MintType.RESERVOIR:
-                is_minted = await self.mint_reservoir_nfts(nft_name, nft_contract)
-            elif mint_type == MintType.ADVENTURE:
-                is_minted = await self.mint_adventure(nft_name, nft_contract)
-            elif mint_type == MintType.INTRODUCING:
-                is_minted = await self.mint_introducing_coinbase_wallet_nft(nft_name, nft_contract)
-            elif mint_type == MintType.STIX:
-                is_minted = await self.mint_stix(nft_name, nft_contract)
+            if not only_claim:
+                if mint_type == MintType.COMMENT:
+                    is_minted = await self.mint_nft(nft_name, nft_contract)
+                elif mint_type == MintType.RESERVOIR:
+                    is_minted = await self.mint_reservoir_nfts(nft_name, nft_contract)
+                elif mint_type == MintType.ADVENTURE:
+                    is_minted = await self.mint_adventure(nft_name, nft_contract)
+                elif mint_type == MintType.INTRODUCING:
+                    is_minted = await self.mint_introducing_coinbase_wallet_nft(nft_name, nft_contract)
+                elif mint_type == MintType.STIX:
+                    is_minted = await self.mint_stix(nft_name, nft_contract)
             await self.claim_task(nft_name, challenge_id)
             if not is_minted:
-                await sleep(sleep_from, sleep_to, 'Sleep before next mint')
+                await sleep(sleep_from, sleep_to, f'Sleep before next {"claim" if only_claim else "mint"}')
 
     async def check_available_spin(self):
         data = {
@@ -406,6 +414,8 @@ class OnchainSummer(Account):
     @retry
     async def spin_the_wheel(self):
         logger.info(f"[{self.account_id}][{self.address}] Start spin the wheel")
+
+        await self.login(self.ref_code)
 
         is_available = await self.check_available_spin()
         if is_available:
@@ -449,3 +459,104 @@ class OnchainSummer(Account):
             await self.wait_until_tx_finished(txn_hash.hex())
         else:
             logger.info(f"[{self.account_id}][{self.address}] Already minted")
+
+    async def login(self, ref_code=""):
+        url = 'https://basehunt.xyz/api/profile/opt-in'
+        data = {
+            'gameId': 2,
+            'referralId': ref_code,
+            'userAddress': self.address
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, headers=self.headers, proxy=self.proxy, json=data) as response:
+                if response.status in (200, 201):
+                    response_data = await response.json()
+                    if response_data['success'] is True:
+                        logger.success(f"[{self.account_id}][{self.address}] Successfully login")
+                    else:
+                        logger.error(
+                            f"[{self.account_id}][{self.address}] Bad response: {await response.text()}")
+                else:
+                    logger.error(
+                        f"[{self.account_id}][{self.address}] Bad response: {await response.text()}")
+                    raise aiohttp.ContentTypeError
+
+    @staticmethod
+    def create_nickname():
+        name = random.choice(['', '_'])
+        person = Person('en')
+        name += person.first_name()
+        name += random.choice(['-', ''])
+        name += person.last_name()
+        return name.lower()
+
+    @staticmethod
+    def generate_hash(domain):
+        node = HexBytes('0x' + '0' * 64)
+        if domain:
+            labels = domain.split(".")
+            for label in reversed(labels):
+                label_hash = keccak(text=label)
+                node = keccak(node + label_hash)
+        return node
+
+    @retry
+    @check_gas
+    async def discount_register_domain(self):
+        logger.info(f"[{self.account_id}][{self.address}] Start register domain")
+
+        contract = self.get_contract('0x4cCb0BB02FCABA27e82a56646E81d8c5bC4119a5', BASENAME_ABI)
+
+        registered = await contract.functions.discountedRegistrants(self.address).call()
+        if registered is True:
+            logger.info(f'[{self.account_id}][{self.address}] Account already registered')
+            return True
+
+        name = self.create_nickname()
+
+        while True:
+            available = await contract.functions.available(name).call()
+            if available is True:
+                break
+            else:
+                name = self.create_nickname()
+
+        domain = name + '.base.eth'
+
+        logger.info(f"[{self.account_id}][{self.address}] Generated domain - {domain}")
+
+        tx_data = await self.get_tx_data()
+
+        domain_hash = self.generate_hash(domain)
+        payload = to_hex(encode(['bytes32', 'string'], [domain_hash, domain]))
+
+        data = [
+            self.w3.to_bytes(
+                hexstr=f'0xd5fa2b00{self.w3.to_hex(domain_hash)[2:]}000000000000000000000000{self.address[2:]}'),
+            self.w3.to_bytes(hexstr=f'0x77372213{payload[2:]}')
+        ]
+
+        transaction = await contract.functions.discountedRegister(
+            (
+                name,
+                self.address,
+                31557600,
+                self.w3.to_checksum_address('0xC6d566A56A1aFf6508b41f6c90ff131615583BCD'),
+                data,
+                True
+            ),
+            self.w3.to_bytes(hexstr='0xc1af3c32616941d3f6d85f4f01aafb556b5620e8868acac1ed2a816fb9d0676d'),
+            self.w3.to_bytes(hexstr='0x00')
+        ).build_transaction(tx_data)
+
+        signed_txn = await self.sign(transaction)
+        txn_hash = await self.send_raw_transaction(signed_txn)
+        await self.wait_until_tx_finished(txn_hash.hex())
+        return False
+
+    async def register_domain(self, sleep_from, sleep_to):
+        await self.login(self.ref_code)
+        await self.discount_register_domain()
+        await sleep(sleep_from, sleep_to, 'Sleep berofe claim')
+        await self.claim_task('Base Domain', '2XaiAPDQ8WwG5CUWfMMYaU')

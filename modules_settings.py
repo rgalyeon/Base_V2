@@ -817,6 +817,8 @@ async def mint_onchain_summer2_nfts(wallet_info):
     Mint nft from Onchain Summer2 Campaign
 
     comment line if you don't need some nft
+
+    only_claim - if True, soft will try to claim without mint
     ______________________________________________________
     """
 
@@ -831,30 +833,30 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'ETH BREAKING THROUGH',  # 0.0001 eth
         'Ethereum ETF',  # 0.0001 eth
         "ETH can't be stopped",  # 0.0001 eth
-        'Happy Birthday Toshi',  # 0.0001 eth
+        # # 'Happy Birthday Toshi',  # 0.0001 eth
         'EURC & Base Launch',  # 0.0001 eth
         'Introducing: Coinbase Wallet web app',  # 0.0001 eth
         'Mister Miggles',
         'Team Liquid Onchain Summer Premiere Series',
-        # 'Nouns Forever (Song A Day #5700)',
+        # # 'Nouns Forever (Song A Day #5700)',
         'the world after ETH ETF approval',
-        # 'Adventure Begins',  # 0.00042 eth
+        # # 'Adventure Begins',  # 0.00042 eth
         'Nouns everywhere ⌐◨-◨',
-        # 'Happy 3rd Nouniversary',
-        # 'Happy Nouniversary',
-        # 'Celebrating the end of Nouns: Season 3',
+        # # 'Happy 3rd Nouniversary',
+        # # 'Happy Nouniversary',
+        # # 'Celebrating the end of Nouns: Season 3',
         'Celebrating Nouns',  # claim doesn't work on website
         'Nounish Vibe',
         'Hand of Nouns',
         'Happy Nouniversary from based Nouns!',
-        # 'Base God and Miggs wif Nouns',
-        # 'nounify the rockies',
-        'Dawn of Daylight',
+        # # 'Base God and Miggs wif Nouns',
+        # # 'nounify the rockies',
+        # # 'Dawn of Daylight',
         'Coffee Days 2024',
-        'STIX Launch Tournament Pass',
+        # # 'STIX Launch Tournament Pass',
         'strut 001',
         'Nouniversary (Blue)',
-        'Toshi Onchain Summer',
+        # # 'Toshi Onchain Summer',
         'Base Canada',
         'Butterfly',
         'THINK BIG',
@@ -862,15 +864,33 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'Toshi Vibe',
         "Whatchu Lookin' At?",
         'Stand with Crypto folk rock',
-        'Endaoment X SWC Shield',
+        # # 'Endaoment X SWC Shield',
         'Stand with Crypto',
         'Yellow Collective Shield Trait',
         'Crypto will bloom',
         'Stand with Crypto Pizza'
     ]
 
-    os_inst = OnchainSummer(wallet_info)
-    await os_inst.mint_all_nft(sleep_from, sleep_to, random_mint, nfts)
+    ref_code = "3e2cc38a-5422-42d5-bd2d-85b5340662fb"
+    only_claim = False
+
+    os_inst = OnchainSummer(wallet_info, ref_code=ref_code)
+    await os_inst.mint_all_nft(sleep_from, sleep_to, random_mint, nfts, ref_code, only_claim)
+
+
+async def mint_base_domain(wallet_info):
+    """
+    Create Base domain with discount
+
+    sleep_from/to - sleep before claim task on onchain summer
+    """
+    sleep_from = 10
+    sleep_to = 20
+
+    ref_code = "3e2cc38a-5422-42d5-bd2d-85b5340662fb"
+
+    os_inst = OnchainSummer(wallet_info, ref_code)
+    await os_inst.register_domain(sleep_from, sleep_to)
 
 
 async def claim_all_badges(wallet_info):
@@ -884,7 +904,9 @@ async def claim_all_badges(wallet_info):
 
     random_mint = True
 
-    os_inst = OnchainSummer(wallet_info)
+    ref_code = "3e2cc38a-5422-42d5-bd2d-85b5340662fb"
+
+    os_inst = OnchainSummer(wallet_info, ref_code)
     await os_inst.claim_all_badges(sleep_from, sleep_to, random_mint)
 
 
@@ -1096,3 +1118,8 @@ def progress_check(wallets_data):
     replace = True
 
     Scan(wallets_data).get_wallet_progress(replace)
+
+
+def onchain_summer_stats_check(wallets_data):
+
+    Scan(wallets_data).get_onchain_summer_stats()

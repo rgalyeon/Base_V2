@@ -5,6 +5,7 @@ SHEET_NAME = 'evm'
 ENCRYPTED_DATA_PATH = 'encrypted_data.txt'
 REALTIME_SETTINGS_PATH = 'realtime_settings.json'
 PROGRESS_PATH = 'progress.xlsx'
+ONCHAIN_SUMMER_SCORE_PATH = 'os_scores.xlsx'
 
 with open('data/rpc.json') as file:
     RPC = json.load(file)
@@ -131,6 +132,9 @@ with open('data/abi/onchain_summer/opensea.json', 'r') as file:
 
 with open('data/abi/onchain_summer/introducing.json', 'r') as file:
     INTRODUCING_ABI = json.load(file)
+
+with open('data/abi/onchain_summer/domain.json', 'r') as file:
+    BASENAME_ABI = json.load(file)
 
 NFTS2ME_CONTRACTS_PATH = 'data/nfts2me_contracts.json'
 
