@@ -555,8 +555,9 @@ class OnchainSummer(Account):
         await self.wait_until_tx_finished(txn_hash.hex())
         return False
 
-    async def register_domain(self, sleep_from, sleep_to):
+    async def register_domain(self, sleep_from, sleep_to, only_claim=False):
         await self.login(self.ref_code)
-        await self.discount_register_domain()
-        await sleep(sleep_from, sleep_to, 'Sleep berofe claim')
+        if not only_claim:
+            await self.discount_register_domain()
+            await sleep(sleep_from, sleep_to, 'Sleep berofe claim')
         await self.claim_task('Base Domain', '2XaiAPDQ8WwG5CUWfMMYaU')
