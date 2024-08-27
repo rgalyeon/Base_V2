@@ -93,7 +93,12 @@ class OnchainSummer(Account):
 
             ('Yellow Collective Shield Trait', '0xea50e58B518435AD2CeCE84d1e099b2e0878B9cF', '71fCEn2cIwqXqLE6wYxGl0', MintType.COMMENT),
             ('Crypto will bloom', '0x651b0A2b9FB9C186fB6C9a9CEddf25B791Ad5753', 'S3DyUSaz6mYehsypyOqPD', MintType.COMMENT),
-            ('Stand with Crypto Pizza', '0x4beAdC00E2A6b6C4fAc1a43FF340E5D71CBB9F77', '1zbecUKJMKwyYoKOn2OV5n', MintType.COMMENT)
+            ('Stand with Crypto Pizza', '0x4beAdC00E2A6b6C4fAc1a43FF340E5D71CBB9F77', '1zbecUKJMKwyYoKOn2OV5n', MintType.COMMENT),
+            ('Duality in motion', '0x5b45498D20d24D9c6Da165eDcd0eBcE0636176Ae', '3Po39fHlC66muE3X5IHNfs', MintType.COMMENT),
+            ('Crypto Vibe', '0x6a43B7e3ebFc915A8021dd05f07896bc092d1415', 'OE6zO6T5M3COHSFcIIvmA', MintType.COMMENT),
+            ('Toshi x SWC 3', '0xb620bEdCe2615A3F35273A08b3e45e3431229A60', '1VaefmSAUYw5vW1lxc0Viq', MintType.COMMENT),
+            ('The Creative Shield', '0x892Bc2468f20D40F4424eE6A504e354D9D7E1866', '6kv6tqF4mCQiGn5SQUwdps', MintType.COMMENT),
+            ('En grade', '0x1f006edBc0Bcc528A743ee7A53b5e3dD393A1Df6', '3wnaF1zwkxXMotK2grz0kO', MintType.COMMENT)
         ]
 
         self.badges = [
@@ -513,7 +518,10 @@ class OnchainSummer(Account):
             logger.info(f'[{self.account_id}][{self.address}] Account already registered')
             return True
 
-        name = self.create_nickname()
+        if self.account_id and self.account_id.isalpha():
+            name = self.account_id.lower()
+        else:
+            name = self.create_nickname()
 
         while True:
             available = await contract.functions.available(name).call()

@@ -133,6 +133,16 @@ class Scan:
                 df.loc[wallet, "Crypto will bloom"] = True
             elif tx['to'] == '0x4beAdC00E2A6b6C4fAc1a43FF340E5D71CBB9F77'.lower() and tx['methodId'] == '0x574fed17':
                 df.loc[wallet, "Stand with Crypto Pizza"] = True
+            elif tx['to'] == '0x5b45498D20d24D9c6Da165eDcd0eBcE0636176Ae'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Duality in motion"] = True
+            elif tx['to'] == '0x6a43B7e3ebFc915A8021dd05f07896bc092d1415'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Crypto Vibe"] = True
+            elif tx['to'] == '0x6a43B7e3ebFc915A8021dd05f07896bc092d1415'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Toshi x SWC 3"] = True
+            elif tx['to'] == '0x892Bc2468f20D40F4424eE6A504e354D9D7E1866'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "The Creative Shield"] = True
+            elif tx['to'] == '0x1f006edBc0Bcc528A743ee7A53b5e3dD393A1Df6'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "En grade"] = True
 
     def wait_transactions(self, address, all_proxies, scan_url):
         n_attemps = 10
@@ -160,7 +170,8 @@ class Scan:
                 'strut 001', 'Nouniversary (Blue)', 'Toshi Onchain Summer', 'Base Canada', 'Butterfly', 'THINK BIG',
                 'Toshi Chess', 'Toshi Vibe', "Whatchu Lookin' At?",
                 'Stand with Crypto folk rock', 'Endaoment X SWC Shield', 'Stand with Crypto',
-                'Yellow Collective Shield Trait', 'Crypto will bloom', 'Stand with Crypto Pizza']
+                'Yellow Collective Shield Trait', 'Crypto will bloom', 'Stand with Crypto Pizza', 'Duality in motion',
+                'Crypto Vibe', 'Toshi x SWC 3', 'The Creative Shield', 'En grade']
 
         df = pd.DataFrame(columns=cols)
         all_proxies = [wallet_info['proxy'] for wallet_info in self.wallets_data]
