@@ -98,7 +98,14 @@ class OnchainSummer(Account):
             ('Crypto Vibe', '0x6a43B7e3ebFc915A8021dd05f07896bc092d1415', 'OE6zO6T5M3COHSFcIIvmA', MintType.COMMENT),
             ('Toshi x SWC 3', '0xb620bEdCe2615A3F35273A08b3e45e3431229A60', '1VaefmSAUYw5vW1lxc0Viq', MintType.COMMENT),
             ('The Creative Shield', '0x892Bc2468f20D40F4424eE6A504e354D9D7E1866', '6kv6tqF4mCQiGn5SQUwdps', MintType.COMMENT),
-            ('En grade', '0x1f006edBc0Bcc528A743ee7A53b5e3dD393A1Df6', '3wnaF1zwkxXMotK2grz0kO', MintType.COMMENT)
+            ('En grade', '0x1f006edBc0Bcc528A743ee7A53b5e3dD393A1Df6', '3wnaF1zwkxXMotK2grz0kO', MintType.COMMENT),
+            ('Mint the vision', '0x8605522B075aFeD48f9987E573E0AA8E572B8452', '3fYDO7ZCCl91Tg7u6cMHBa', MintType.COMMENT),
+            ('Stand With Crypto Shield Rune', '0x13fCcd944B1D88d0670cae18A00abD272256DDeE', '1FH5jNuTVIRrPBUNtKrFtQ', MintType.COMMENT),
+            ('Shielding the wonder', '0x6A3dA97Dc82c098038940Db5CB2Aa6B1541f2ebe', '4EHmwNf6hrcTFnume2AUhv', MintType.COMMENT),
+            ('Earth Stands with Crypto', '0xd1E1da0b62761b0df8135aE4e925052C8f618458', '7JZn2HJuvLZRoE8R8a8OBp', MintType.COMMENT),
+            ('⌐◨-◨ Stand With Crypto', '0x03c6eF731453bfEc65a800F83f026ad011D8Abec', '4JS8wKnPtZ0lE34C5crIUk', MintType.COMMENT),
+            ('We stand, we build', '0xEb9A3540E6A3dc31d982A47925d5831E02a3Fe1e', '43EAydXs7EVNGkR9UZ5JJH', MintType.COMMENT),
+            ('Live and Let Live!', '0x279dFFD2b14a4A60e266bEfb0D2c10E695D58113', '4MMQPGoZviSqLoJgaVDY05', MintType.COMMENT)
         ]
 
         self.badges = [
@@ -155,7 +162,12 @@ class OnchainSummer(Account):
 
         logger.info(f"[{self.account_id}][{self.address}] Mint {nft_name} nft")
 
-        mint_price = 0.0006 if nft_contract == '0xf16755b43eE1a458161f0faE5a9124729f4f6B1B' else 0.0001
+        if nft_contract == '0xf16755b43eE1a458161f0faE5a9124729f4f6B1B':
+            mint_price = 0.0006
+        elif nft_contract == '0x279dFFD2b14a4A60e266bEfb0D2c10E695D58113':
+            mint_price = 0.0005
+        else:
+            mint_price = 0.0001
         contract = self.get_contract(nft_contract, ONCHAIN_SUMMER_ABI)
         n_nfts = await contract.functions.balanceOf(self.address).call()
         if n_nfts < 1:

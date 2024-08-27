@@ -873,7 +873,14 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'Crypto Vibe',
         'Toshi x SWC 3',
         'The Creative Shield',
-        'En grade'
+        'En grade',
+        'Mint the vision',
+        'Stand With Crypto Shield Rune',
+        'Shielding the wonder',
+        'Earth Stands with Crypto',
+        '⌐◨-◨ Stand With Crypto',
+        'We stand, we build',
+        'Live and Let Live!'
     ]
 
     ref_code = "3e2cc38a-5422-42d5-bd2d-85b5340662fb"
@@ -978,12 +985,12 @@ async def custom_routes(wallet_info):
     """
 
     use_modules = [
-        mint_coinearnings,
-        unlooped_mint
+        mint_onchain_summer2_nfts,
+        mint_base_domain
     ]
 
-    sleep_from = 3600
-    sleep_to = 7200
+    sleep_from = 60
+    sleep_to = 120
 
     random_module = True
 

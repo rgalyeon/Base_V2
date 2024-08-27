@@ -143,6 +143,20 @@ class Scan:
                 df.loc[wallet, "The Creative Shield"] = True
             elif tx['to'] == '0x1f006edBc0Bcc528A743ee7A53b5e3dD393A1Df6'.lower() and tx['methodId'] == '0x574fed17':
                 df.loc[wallet, "En grade"] = True
+            elif tx['to'] == '0x8605522B075aFeD48f9987E573E0AA8E572B8452'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Mint the vision'] = True
+            elif tx['to'] == '0x13fCcd944B1D88d0670cae18A00abD272256DDeE'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Stand With Crypto Shield Rune'] = True
+            elif tx['to'] == '0x6A3dA97Dc82c098038940Db5CB2Aa6B1541f2ebe'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Shielding the wonder'] = True
+            elif tx['to'] == '0xd1E1da0b62761b0df8135aE4e925052C8f618458'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Earth Stands with Crypto'] = True
+            elif tx['to'] == '0x03c6eF731453bfEc65a800F83f026ad011D8Abec'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, '⌐◨-◨ Stand With Crypto'] = True
+            elif tx['to'] == '0xEb9A3540E6A3dc31d982A47925d5831E02a3Fe1e'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'We stand, we build'] = True
+            elif tx['to'] == '0x279dFFD2b14a4A60e266bEfb0D2c10E695D58113'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Live and Let Live!'] = True
 
     def wait_transactions(self, address, all_proxies, scan_url):
         n_attemps = 10
@@ -171,7 +185,9 @@ class Scan:
                 'Toshi Chess', 'Toshi Vibe', "Whatchu Lookin' At?",
                 'Stand with Crypto folk rock', 'Endaoment X SWC Shield', 'Stand with Crypto',
                 'Yellow Collective Shield Trait', 'Crypto will bloom', 'Stand with Crypto Pizza', 'Duality in motion',
-                'Crypto Vibe', 'Toshi x SWC 3', 'The Creative Shield', 'En grade']
+                'Crypto Vibe', 'Toshi x SWC 3', 'The Creative Shield', 'En grade', 'Mint the vision',
+                'Stand With Crypto Shield Rune', 'Shielding the wonder', '⌐◨-◨ Stand With Crypto',
+                'Earth Stands with Crypto', 'We stand, we build', 'Live and Let Live!']
 
         df = pd.DataFrame(columns=cols)
         all_proxies = [wallet_info['proxy'] for wallet_info in self.wallets_data]
