@@ -15,6 +15,8 @@ from eth_utils import keccak
 from hexbytes import HexBytes
 from eth_utils import to_hex
 from eth_abi import encode
+from datetime import datetime
+from eth_account.messages import encode_defunct
 
 
 class MintType(Enum):
@@ -23,6 +25,7 @@ class MintType(Enum):
     ADVENTURE = 3
     INTRODUCING = 4
     STIX = 5
+    JUICY = 6
 
 
 class OnchainSummer(Account):
@@ -105,7 +108,13 @@ class OnchainSummer(Account):
             ('Earth Stands with Crypto', '0xd1E1da0b62761b0df8135aE4e925052C8f618458', '7JZn2HJuvLZRoE8R8a8OBp', MintType.COMMENT),
             ('⌐◨-◨ Stand With Crypto', '0x03c6eF731453bfEc65a800F83f026ad011D8Abec', '4JS8wKnPtZ0lE34C5crIUk', MintType.COMMENT),
             ('We stand, we build', '0xEb9A3540E6A3dc31d982A47925d5831E02a3Fe1e', '43EAydXs7EVNGkR9UZ5JJH', MintType.COMMENT),
-            ('Live and Let Live!', '0x279dFFD2b14a4A60e266bEfb0D2c10E695D58113', '4MMQPGoZviSqLoJgaVDY05', MintType.COMMENT)
+            ('Live and Let Live!', '0x279dFFD2b14a4A60e266bEfb0D2c10E695D58113', '4MMQPGoZviSqLoJgaVDY05', MintType.COMMENT),
+            ('Juicy Pack', '0x6ba5Ba71810c1196f20123B57B66C9ed2A5dBd76', 'ocsChallenge_3b1c2886-3168-45c7-b2cd-b590cde66c61', MintType.JUICY),
+            ('Forbes WEB3 Inspire', '0x0821D16eCb68FA7C623f0cD7c83C8D5Bd80bd822', 'ocsChallenge_b3f47fc6-3649-4bad-9e10-7244fbe1d484', MintType.INTRODUCING),
+            ('Let The Shield Shine', '0x2a8e46E78BA9667c661326820801695dcf1c403E', '7430li8iAyirOzGFhNbL3w', MintType.COMMENT),
+            ('All for One', '0x8e50c64310b55729F8EE67c471E052B1Cd7AF5b3', '6ENasd7Ikvs7VBlC02rsCg', MintType.COMMENT),
+            ("Let's Stand", '0x95ff853A4C66a5068f1ED8Aaf7c6F4e3bDBEBAE1', '66QmTDpn63hpgrkVgRK0ve', MintType.COMMENT),
+            ('The Eternal Skywheel', '0xD3d124B6A9497B3695918cEEB0e9c4D9ED6972fB', '72gJnCAkt9WBaWzfZolzGU', MintType.COMMENT)
         ]
 
         self.badges = [
@@ -166,6 +175,8 @@ class OnchainSummer(Account):
             mint_price = 0.0006
         elif nft_contract == '0x279dFFD2b14a4A60e266bEfb0D2c10E695D58113':
             mint_price = 0.0005
+        elif nft_contract == '0xD3d124B6A9497B3695918cEEB0e9c4D9ED6972fB':
+            mint_price = 0.0002
         else:
             mint_price = 0.0001
         contract = self.get_contract(nft_contract, ONCHAIN_SUMMER_ABI)
@@ -264,6 +275,8 @@ class OnchainSummer(Account):
         n_nfts = await contract.functions.balanceOf(self.address).call()
 
         mint_price = 0.0001
+        if nft_contract == '0x0821D16eCb68FA7C623f0cD7c83C8D5Bd80bd822':
+            mint_price = 0
         currency = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
 
         if n_nfts < 1:
@@ -273,10 +286,10 @@ class OnchainSummer(Account):
                 self.address,
                 1,
                 currency,
-                100000000000000,
+                self.w3.to_wei(mint_price, 'ether'),
                 {'proof': [],
                  'quantityLimitPerWallet': 2 ** 256 - 1,
-                 'pricePerToken': 100000000000000,
+                 'pricePerToken': self.w3.to_wei(mint_price, 'ether'),
                  'currency': currency
                  },
                 "0x"
@@ -383,6 +396,100 @@ class OnchainSummer(Account):
             return True
         return False
 
+    async def get_bearer_token(self):
+        url = 'https://gram.voyage/api/ocs/nonce'
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=self.headers, proxy=self.proxy) as response:
+                response_data = await response.json()
+
+        nonce = response_data['data']['nonce']
+
+        date = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + 'Z'
+
+        url = 'https://gram.voyage/api/ocs/verify'
+        msg = 'gram.voyage wants you to sign in with your Ethereum account:\n' \
+              f'{self.address}\n\n' \
+              'Sign in Grampus.\n\n' \
+              'URI: https://gram.voyage\n' \
+              'Version: 1\n' \
+              'Chain ID: 8453\n' \
+              f'Nonce: {nonce}\n' \
+              f'Issued At: {date}'
+
+        message = encode_defunct(text=msg)
+        signed_message = self.w3.eth.account.sign_message(message, self.private_key)
+        signature = signed_message.signature
+        data = {
+            'message': {
+                'address': self.address,
+                'chainId': 8453,
+                'domain': "gram.voyage",
+                'issuedAt': date,
+                'nonce': nonce,
+                'statement': 'Sign in Grampus.',
+                'uri': 'https://gram.voyage',
+                'version': '1'
+            },
+            'signature': self.w3.to_hex(signature)
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, headers=self.headers, proxy=self.proxy, json=data) as response:
+                response_data = await response.json()
+
+        return response_data['data']['token']
+
+    @retry
+    @check_gas
+    async def mint_juicy_pack(self, nft_name, nft_contract):
+        logger.info(f"[{self.account_id}][{self.address}] Mint {nft_name} nft")
+
+        contract = self.get_contract(nft_contract, ONCHAIN_SUMMER_ABI)
+        n_nfts = await contract.functions.balanceOf(self.address).call()
+
+        if n_nfts < 1:
+
+            url = 'https://gram.voyage/api/ocs/minting'
+
+            data = {
+                'address': self.address,
+                'nonce': 'd1d40b6fb16aa388',
+                'order': [1, 2, 3]
+            }
+
+            headers = self.headers.copy()
+            headers['authorization'] = await self.get_bearer_token()
+            headers['origin'] = 'https://gram.voyage'
+            headers['referer'] = 'https://gram.voyage/game/juicyadventure'
+
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, headers=headers, proxy=self.proxy, json=data) as response:
+                    response_data = await response.json()
+                    if response.status in (200, 201):
+                        token_id, rarity, signature = (response_data['data']['tokenId'],
+                                                       response_data['data']['rarity'],
+                                                       response_data['data']['signature'])
+                    else:
+                        logger.error(f"[{self.account_id}][{self.address}] Bad response")
+                        raise ValueError('Error on mint')
+
+            tx_data = await self.get_tx_data()
+
+            transaction = await contract.functions.mintJuicyPack(
+                token_id,
+                rarity,
+                signature
+            ).build_transaction(tx_data)
+
+            signed_txn = await self.sign(transaction)
+            txn_hash = await self.send_raw_transaction(signed_txn)
+            await self.wait_until_tx_finished(txn_hash.hex())
+        else:
+            logger.info(f"[{self.account_id}][{self.address}] Already minted")
+            return True
+        return False
+
     async def mint_all_nft(self, sleep_from, sleep_to, random_mint, nfts_for_mint, ref_code, only_claim):
         await self.login(self.ref_code)
         nfts = self.os_nfts2.copy()
@@ -406,6 +513,8 @@ class OnchainSummer(Account):
                     is_minted = await self.mint_introducing_coinbase_wallet_nft(nft_name, nft_contract)
                 elif mint_type == MintType.STIX:
                     is_minted = await self.mint_stix(nft_name, nft_contract)
+                elif mint_type == MintType.JUICY:
+                    is_minted = await self.mint_juicy_pack(nft_name, nft_contract)
             await self.claim_task(nft_name, challenge_id)
             if not is_minted:
                 await sleep(sleep_from, sleep_to, f'Sleep before next {"claim" if only_claim else "mint"}')

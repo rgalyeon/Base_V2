@@ -99,7 +99,8 @@ async def bridge_orbiter(wallet_info):
     from_chains – source chain - ethereum, polygon_zkevm, arbitrum, optimism, zksync | Select one or more
                   If more than one chain is specified, the software will check the balance in each network and
                   select the chain with the highest balance.
-    to_chain – destination chain - ethereum, polygon_zkevm, arbitrum, optimism, zksync | Select one
+    to_chains – destination chain - ethereum, polygon_zkevm, arbitrum, optimism, zksync | Select one or more
+                If more than one is specified, randomly selected
 
     min_amount - the minimum possible amount for sending
     max_amount - maximum possible amount to send
@@ -119,10 +120,12 @@ async def bridge_orbiter(wallet_info):
                           if there is no network with the required balance, the bridge will not be made
     bridge_from_all_chains - if True, will be produced from all chains specified in the parameter from_chains
     sleep_between_transfers - only if bridge_from_all_chains=True. sleep between few transfers
+    wait_unlimited_time - the software will wait indefinitely for funds on the wallet in the source chain
+    sleep_between_attempts - minimum-maximum delay between balance checks (if wait_unlimited_time - True)
     """
 
-    from_chains = ["arbitrum", "optimism", "base", "linea"]
-    to_chain = "scroll"
+    from_chains = ["arbitrum", "optimism", "base", "linea"]  # Chain with max balance will be selected
+    to_chain = ["scroll"]  # Randomly selected
 
     min_amount = 0.005
     max_amount = 0.0051
@@ -141,11 +144,56 @@ async def bridge_orbiter(wallet_info):
     bridge_from_all_chains = False
     sleep_between_transfers = [120, 300]
 
-    orbiter_inst = Orbiter(wallet_info)
+    wait_unlimited_time = False
+    sleep_between_attempts = [200, 300]  # min, max
+
+    orbiter_inst = Orbiter(wallet_info, from_chains=from_chains)
     await orbiter_inst.transfer_eth(
         from_chains, min_amount, max_amount, decimal, all_amount, min_percent, max_percent, save_funds,
         check_balance_on_dest, check_amount, min_required_amount, to_chain, bridge_from_all_chains,
-        sleep_between_transfers=sleep_between_transfers
+        sleep_between_transfers=sleep_between_transfers, wait_unlimited_time=wait_unlimited_time,
+        sleep_between_attempts=sleep_between_attempts
+    )
+
+
+async def bridge_relay(wallet_info):
+    """
+    Bridge from relay
+
+    Supported chains - 'arbitrum', 'arbitrum_nova', 'base', 'optimism', 'zksync', 'ethereum', 'zora', 'mode', 'blast'
+    ______________________________________________________
+    Description: Look at bridge_orbiter description
+    """
+
+    from_chains = ["base"]  # Chain with max balance will be selected
+    to_chain = ["ethereum"]  # Randomly selected
+
+    min_amount = 0.005
+    max_amount = 0.0051
+    decimal = 6
+
+    all_amount = True
+
+    min_percent = 100
+    max_percent = 100
+
+    check_balance_on_dest = False
+    check_amount = 0.005
+    save_funds = [0.00005, 0.00003]
+    min_required_amount = 0
+
+    bridge_from_all_chains = False
+    sleep_between_transfers = [120, 300]
+
+    wait_unlimited_time = False
+    sleep_between_attempts = [200, 300]  # min, max
+
+    relay_inst = Relay(wallet_info, from_chains=from_chains)
+    await relay_inst.transfer_eth(
+        from_chains, min_amount, max_amount, decimal, all_amount, min_percent, max_percent, save_funds,
+        check_balance_on_dest, check_amount, min_required_amount, to_chain, bridge_from_all_chains,
+        sleep_between_transfers=sleep_between_transfers, wait_unlimited_time=wait_unlimited_time,
+        sleep_between_attempts=sleep_between_attempts
     )
 
 
@@ -822,8 +870,8 @@ async def mint_onchain_summer2_nfts(wallet_info):
     ______________________________________________________
     """
 
-    sleep_from = 30
-    sleep_to = 60
+    sleep_from = 20
+    sleep_to = 40
 
     random_mint = True
 
@@ -869,18 +917,26 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'Yellow Collective Shield Trait',
         'Crypto will bloom',
         'Stand with Crypto Pizza',
-        'Duality in motion',
-        'Crypto Vibe',
+
+        # 'Duality in motion',
+        # 'Crypto Vibe',
         'Toshi x SWC 3',
         'The Creative Shield',
         'En grade',
         'Mint the vision',
-        'Stand With Crypto Shield Rune',
+        # 'Stand With Crypto Shield Rune',
         'Shielding the wonder',
         'Earth Stands with Crypto',
-        '⌐◨-◨ Stand With Crypto',
+        # '⌐◨-◨ Stand With Crypto',
         'We stand, we build',
-        'Live and Let Live!'
+        # 'Live and Let Live!',
+
+        'Juicy Pack',
+        'Forbes WEB3 Inspire',
+        'Let The Shield Shine',
+        'All for One',
+        "Let's Stand",
+        # 'The Eternal Skywheel'
     ]
 
     ref_code = "3e2cc38a-5422-42d5-bd2d-85b5340662fb"
@@ -894,7 +950,7 @@ async def mint_base_domain(wallet_info):
     """
     Create Base domain with discount
 
-    sleep_from/to - sleep before claim task on onchain summer
+    sleep_from/to - sleep before claim task on onchain summerыс
     """
     sleep_from = 10
     sleep_to = 20

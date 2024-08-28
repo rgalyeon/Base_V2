@@ -1,3 +1,4 @@
+import asyncio
 from .account import Account
 from typing import List
 from web3 import AsyncWeb3, AsyncHTTPProvider
@@ -10,8 +11,9 @@ from utils.gas_checker import check_gas
 
 
 class Transfer(Account):
-    def __init__(self, wallet_info):
-        super().__init__(wallet_info=wallet_info, chain='base')
+    def __init__(self, wallet_info, from_chains=None):
+        chain = 'base' if not from_chains or 'base' in from_chains else 'ethereum'
+        super().__init__(wallet_info=wallet_info, chain=chain)
 
     async def find_chains_with_max_balance(self, chains: List[str], min_required_amount):
         source_chains = []
@@ -27,6 +29,15 @@ class Transfer(Account):
 
         source_chains = [chain for chain, _ in sorted(source_chains, key=lambda x: x[1], reverse=True)]
         return source_chains
+
+    def change_settings(self, source_chain):
+        self.chain = source_chain
+        self.w3 = AsyncWeb3(AsyncHTTPProvider(random.choice(RPC[self.chain]["rpc"]),
+                                              request_kwargs=self.request_kwargs),
+                            middlewares=[async_geth_poa_middleware],
+                            )
+        self.explorer = RPC[self.chain]["explorer"]
+        self.token = RPC[self.chain]["token"]
 
     async def check_balance_on_destination(self, check: bool, dst_chain: str, amount_to_check: float):
         if not check:
@@ -78,9 +89,13 @@ class Transfer(Account):
             min_amount: float, max_amount: float, decimal: int,
             all_amount: bool, min_percent: int, max_percent: int,
             save_funds: List[float], check_balance_on_dest: bool, check_amount: float,
-            min_required_amount: float, destination_chain: str = 'base',
-            bridge_from_all_chains: bool = False, sleep_between_transfers=None):
+            min_required_amount: float, destination_chains: List[str] = None,
+            bridge_from_all_chains: bool = False, sleep_between_transfers=None,
+            wait_unlimited_time=False, sleep_between_attempts=(120, 300)):
 
+        if not destination_chains:
+            destination_chains = ["scroll"]
+        destination_chain = random.choice(destination_chains)
         need_bridge = await self.check_balance_on_destination(check_balance_on_dest, destination_chain, check_amount)
         if not need_bridge:
             logger.info(
@@ -89,12 +104,22 @@ class Transfer(Account):
             )
             return
 
-        source_chains = await self.find_chains_with_max_balance(from_chains, min_required_amount)
-        if not source_chains:
-            logger.warning(f'[{self.account_id}][{self.address}] No chains with required balance. Skip module')
-            return
+        # wait unlimited time handle
+        while True:
+            source_chains = await self.find_chains_with_max_balance(from_chains, min_required_amount)
+            if not source_chains:
+                if wait_unlimited_time:
+                    logger.info(f'[{self.account_id}][{self.address}] Waiting money for bridge '
+                                f'[{self.__class__.__name__}]')
+                    await sleep(*sleep_between_attempts, message="Sleep before next attempt")
+                    continue
+                else:
+                    logger.warning(f'[{self.account_id}][{self.address}] No chains with required balance. Skip module')
+                    return
+            break
+
         for source_chain in source_chains:
-            await self.setup_w3(source_chain)
+            self.change_settings(source_chain)
 
             amount_wei, amount, balance = await self.calculate_transfer_amount(min_amount=min_amount,
                                                                                max_amount=max_amount,

@@ -158,6 +158,19 @@ class Scan:
             elif tx['to'] == '0x279dFFD2b14a4A60e266bEfb0D2c10E695D58113'.lower() and tx['methodId'] == '0x574fed17':
                 df.loc[wallet, 'Live and Let Live!'] = True
 
+            elif tx['to'] == '0x6ba5Ba71810c1196f20123B57B66C9ed2A5dBd76'.lower():
+                df.loc[wallet, 'Juicy Pack'] = True
+            elif tx['to'] == '0x0821D16eCb68FA7C623f0cD7c83C8D5Bd80bd822'.lower():
+                df.loc[wallet, 'Forbes WEB3 Inspire'] = True
+            elif tx['to'] == '0x2a8e46E78BA9667c661326820801695dcf1c403E'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'Let The Shield Shine'] = True
+            elif tx['to'] == '0x8e50c64310b55729F8EE67c471E052B1Cd7AF5b3'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, 'All for One'] = True
+            elif tx['to'] == '0x95ff853A4C66a5068f1ED8Aaf7c6F4e3bDBEBAE1'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "Let's Stand"] = True
+            elif tx['to'] == '0xD3d124B6A9497B3695918cEEB0e9c4D9ED6972fB'.lower() and tx['methodId'] == '0x574fed17':
+                df.loc[wallet, "The Eternal Skywheel"] = True
+
     def wait_transactions(self, address, all_proxies, scan_url):
         n_attemps = 10
         while n_attemps:
@@ -187,7 +200,9 @@ class Scan:
                 'Yellow Collective Shield Trait', 'Crypto will bloom', 'Stand with Crypto Pizza', 'Duality in motion',
                 'Crypto Vibe', 'Toshi x SWC 3', 'The Creative Shield', 'En grade', 'Mint the vision',
                 'Stand With Crypto Shield Rune', 'Shielding the wonder', '⌐◨-◨ Stand With Crypto',
-                'Earth Stands with Crypto', 'We stand, we build', 'Live and Let Live!']
+                'Earth Stands with Crypto', 'We stand, we build', 'Live and Let Live!',
+                'Juicy Pack', 'Forbes WEB3 Inspire', 'Let The Shield Shine', 'All for One', "Let's Stand"
+                'The Eternal Skywheel']
 
         df = pd.DataFrame(columns=cols)
         all_proxies = [wallet_info['proxy'] for wallet_info in self.wallets_data]
