@@ -36,6 +36,7 @@ def get_module():
             Choice(f"{next(counter)}) Withdraw from OKX", withdraw_okx),
             Choice(f"{next(counter)}) Make bridge to Base", bridge_base),
             Choice(f"{next(counter)}) Make bridge on Orbiter", bridge_orbiter),
+            Choice(f"{next(counter)}) Bridge Relay", bridge_relay),
             Choice(f"{next(counter)}) Wrap ETH", wrap_eth),
             Choice(f"{next(counter)}) Unwrap ETH", unwrap_eth),
             Choice(f"{next(counter)}) Swap on Uniswap", swap_uniswap),
