@@ -201,7 +201,7 @@ class Scan:
                 'Crypto Vibe', 'Toshi x SWC 3', 'The Creative Shield', 'En grade', 'Mint the vision',
                 'Stand With Crypto Shield Rune', 'Shielding the wonder', '⌐◨-◨ Stand With Crypto',
                 'Earth Stands with Crypto', 'We stand, we build', 'Live and Let Live!',
-                'Juicy Pack', 'Forbes WEB3 Inspire', 'Let The Shield Shine', 'All for One', "Let's Stand"
+                'Juicy Pack', 'Forbes WEB3 Inspire', 'Let The Shield Shine', 'All for One', "Let's Stand",
                 'The Eternal Skywheel']
 
         df = pd.DataFrame(columns=cols)
