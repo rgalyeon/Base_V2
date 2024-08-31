@@ -870,73 +870,76 @@ async def mint_onchain_summer2_nfts(wallet_info):
     ______________________________________________________
     """
 
-    sleep_from = 20
-    sleep_to = 40
+    sleep_from = 10
+    sleep_to = 20
 
     random_mint = True
 
     nfts = [
-        'Celebrating the Ethereum ETF',  # 0.0001 eth
-        'ETFEREUM',  # 0.0001 eth
-        'ETH BREAKING THROUGH',  # 0.0001 eth
-        'Ethereum ETF',  # 0.0001 eth
-        "ETH can't be stopped",  # 0.0001 eth
-        # # 'Happy Birthday Toshi',  # 0.0001 eth
-        'EURC & Base Launch',  # 0.0001 eth
-        'Introducing: Coinbase Wallet web app',  # 0.0001 eth
-        'Mister Miggles',
-        'Team Liquid Onchain Summer Premiere Series',
-        # # 'Nouns Forever (Song A Day #5700)',
-        'the world after ETH ETF approval',
-        # # 'Adventure Begins',  # 0.00042 eth
-        'Nouns everywhere ⌐◨-◨',
-        # # 'Happy 3rd Nouniversary',
-        # # 'Happy Nouniversary',
-        # # 'Celebrating the end of Nouns: Season 3',
-        'Celebrating Nouns',  # claim doesn't work on website
-        'Nounish Vibe',
-        'Hand of Nouns',
-        'Happy Nouniversary from based Nouns!',
-        # # 'Base God and Miggs wif Nouns',
-        # # 'nounify the rockies',
-        # # 'Dawn of Daylight',
-        'Coffee Days 2024',
-        # # 'STIX Launch Tournament Pass',
-        'strut 001',
-        'Nouniversary (Blue)',
-        # # 'Toshi Onchain Summer',
-        'Base Canada',
-        'Butterfly',
-        'THINK BIG',
-        'Toshi Chess',
-        'Toshi Vibe',
-        "Whatchu Lookin' At?",
-        'Stand with Crypto folk rock',
-        # 'Endaoment X SWC Shield',
-        'Stand with Crypto',
-        'Yellow Collective Shield Trait',
-        'Crypto will bloom',
-        'Stand with Crypto Pizza',
+        # 'Celebrating the Ethereum ETF',  # 0.0001 eth
+        # 'ETFEREUM',  # 0.0001 eth
+        # 'ETH BREAKING THROUGH',  # 0.0001 eth
+        # 'Ethereum ETF',  # 0.0001 eth
+        # "ETH can't be stopped",  # 0.0001 eth
+        # # # 'Happy Birthday Toshi',  # 0.0001 eth
+        # 'EURC & Base Launch',  # 0.0001 eth
+        # 'Introducing: Coinbase Wallet web app',  # 0.0001 eth
+        # 'Mister Miggles',
+        # 'Team Liquid Onchain Summer Premiere Series',
+        # # # 'Nouns Forever (Song A Day #5700)',
+        # 'the world after ETH ETF approval',
+        # # # 'Adventure Begins',  # 0.00042 eth
+        # 'Nouns everywhere ⌐◨-◨',
+        # # # 'Happy 3rd Nouniversary',
+        # # # 'Happy Nouniversary',
+        # # # 'Celebrating the end of Nouns: Season 3',
+        # 'Celebrating Nouns',  # claim doesn't work on website
+        # 'Nounish Vibe',
+        # 'Hand of Nouns',
+        # 'Happy Nouniversary from based Nouns!',
+        # # # 'Base God and Miggs wif Nouns',
+        # # # 'nounify the rockies',
+        # # # 'Dawn of Daylight',
+        # 'Coffee Days 2024',
+        # # # 'STIX Launch Tournament Pass',
+        # 'strut 001',
+        # 'Nouniversary (Blue)',
+        # # # 'Toshi Onchain Summer',
+        # 'Base Canada',
+        # 'Butterfly',
+        # 'THINK BIG',
+        # 'Toshi Chess',
+        # 'Toshi Vibe',
+        # "Whatchu Lookin' At?",
+        # 'Stand with Crypto folk rock',
+        # # 'Endaoment X SWC Shield',
+        # 'Stand with Crypto',
+        # 'Yellow Collective Shield Trait',
+        # 'Crypto will bloom',
+        # 'Stand with Crypto Pizza',
 
         # 'Duality in motion',
         # 'Crypto Vibe',
-        'Toshi x SWC 3',
-        'The Creative Shield',
-        'En grade',
-        'Mint the vision',
+        # 'Toshi x SWC 3',
+        # 'The Creative Shield',
+        # 'En grade',
+        # 'Mint the vision',
         # 'Stand With Crypto Shield Rune',
-        'Shielding the wonder',
-        'Earth Stands with Crypto',
+        # 'Shielding the wonder',
+        # 'Earth Stands with Crypto',
         # '⌐◨-◨ Stand With Crypto',
-        'We stand, we build',
+        # 'We stand, we build',
         # 'Live and Let Live!',
 
-        'Juicy Pack',
-        'Forbes WEB3 Inspire',
-        'Let The Shield Shine',
-        'All for One',
-        "Let's Stand",
-        # 'The Eternal Skywheel'
+        # 'Juicy Pack',
+        # 'Forbes WEB3 Inspire',
+        # 'Let The Shield Shine',
+        # 'All for One',
+        # "Let's Stand",
+        # 'The Eternal Skywheel',
+        'New Way',
+        'Nouns and community',
+        'Truworld Onchain Summer Pass'
     ]
 
     ref_code = "3e2cc38a-5422-42d5-bd2d-85b5340662fb"
@@ -968,8 +971,8 @@ async def claim_all_badges(wallet_info):
     ______________________________________________________
     """
 
-    sleep_from = 30
-    sleep_to = 60
+    sleep_from = 10
+    sleep_to = 20
 
     random_mint = True
 

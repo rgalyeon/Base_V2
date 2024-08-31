@@ -4,7 +4,7 @@ import random
 import aiohttp
 import web3
 from loguru import logger
-from config import ONCHAIN_SUMMER_ABI, ONCHAIN_SUMMER_CONTRACT, INTRODUCING_ABI, COINEARNINGS_ABI, BASENAME_ABI
+from config import ONCHAIN_SUMMER_ABI, ONCHAIN_SUMMER_CONTRACT, INTRODUCING_ABI, COINEARNINGS_ABI, BASENAME_ABI, PASS_ABI
 from utils.gas_checker import check_gas
 from utils.helpers import retry, sleep
 from .account import Account
@@ -26,6 +26,7 @@ class MintType(Enum):
     INTRODUCING = 4
     STIX = 5
     JUICY = 6
+    PASS = 7
 
 
 class OnchainSummer(Account):
@@ -114,20 +115,24 @@ class OnchainSummer(Account):
             ('Let The Shield Shine', '0x2a8e46E78BA9667c661326820801695dcf1c403E', '7430li8iAyirOzGFhNbL3w', MintType.COMMENT),
             ('All for One', '0x8e50c64310b55729F8EE67c471E052B1Cd7AF5b3', '6ENasd7Ikvs7VBlC02rsCg', MintType.COMMENT),
             ("Let's Stand", '0x95ff853A4C66a5068f1ED8Aaf7c6F4e3bDBEBAE1', '66QmTDpn63hpgrkVgRK0ve', MintType.COMMENT),
-            ('The Eternal Skywheel', '0xD3d124B6A9497B3695918cEEB0e9c4D9ED6972fB', '72gJnCAkt9WBaWzfZolzGU', MintType.COMMENT)
+            ('The Eternal Skywheel', '0xD3d124B6A9497B3695918cEEB0e9c4D9ED6972fB', '72gJnCAkt9WBaWzfZolzGU', MintType.COMMENT),
+            ('New Way', '0x674efEb35E7a753a9F015d970B8b580bD509FfCA', '3JKhK2C1b3rzuIqYUiavJN', MintType.COMMENT),
+            ('Nouns and community', '0x227a42Cdbf9Dd3FeB18573d64Da013f8EB203107', '2HJXu4iu79GaVKPxH7xghW', MintType.COMMENT),
+            ('Truworld Onchain Summer Pass', '0xf2b0F524e754217905f043A0759d594DA892A59e', 'ocsChallenge_b00cf94a-51aa-4359-abf7-2cada197d0ca', MintType.PASS)
+
         ]
 
         self.badges = [
-            ('StandWithCryptoBadge', '1'),
-            ('CoinbaseOneBadge', '2'),
+            # ('StandWithCryptoBadge', '1'),
+            # ('CoinbaseOneBadge', '2'),
             ('BuildathonBadge', '3'),
-            ('CollectorBadge', '4'),
-            ('TraderBadge', '5'),
-            ('SaverBadge', '6'),
+            # ('CollectorBadge', '4'),
+            # ('TraderBadge', '5'),
+            # ('SaverBadge', '6'),
             ('TX10Badge', '7'),
             ('TX50Badge', '8'),
             ('TX100Badge', '9'),
-            ('TX1000Badge', '10')
+            # ('TX1000Badge', '10')
         ]
 
         self.ref_code = ref_code
@@ -225,7 +230,6 @@ class OnchainSummer(Account):
                                  f"{response.status}")
                     raise ValueError('Error on claim')
 
-    @retry
     async def claim_badge(self, badge_id, badge_name):
         logger.info(f"[{self.account_id}][{self.address}] Start claim {badge_name} badge")
 
@@ -289,6 +293,42 @@ class OnchainSummer(Account):
                 self.w3.to_wei(mint_price, 'ether'),
                 {'proof': [],
                  'quantityLimitPerWallet': 2 ** 256 - 1,
+                 'pricePerToken': self.w3.to_wei(mint_price, 'ether'),
+                 'currency': currency
+                 },
+                "0x"
+            ).build_transaction(tx_data)
+
+            signed_txn = await self.sign(transaction)
+            txn_hash = await self.send_raw_transaction(signed_txn)
+            await self.wait_until_tx_finished(txn_hash.hex())
+        else:
+            logger.info(f"[{self.account_id}][{self.address}] Already minted")
+            return True
+        return False
+
+    @retry
+    @check_gas
+    async def mint_onchain_summer_pass(self, nft_name, nft_contract):
+        logger.info(f"[{self.account_id}][{self.address}] Mint {nft_name} nft")
+
+        contract = self.get_contract(nft_contract, PASS_ABI)
+        n_nfts = await contract.functions.balanceOf(self.address, 0).call()
+
+        mint_price = 0
+        currency = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+
+        if n_nfts < 1:
+            tx_data = await self.get_tx_data(value=self.w3.to_wei(mint_price, 'ether'))
+
+            transaction = await contract.functions.claim(
+                self.address,
+                0,
+                1,
+                currency,
+                self.w3.to_wei(mint_price, 'ether'),
+                {'proof': [],
+                 'quantityLimitPerWallet': 100,
                  'pricePerToken': self.w3.to_wei(mint_price, 'ether'),
                  'currency': currency
                  },
@@ -515,6 +555,8 @@ class OnchainSummer(Account):
                     is_minted = await self.mint_stix(nft_name, nft_contract)
                 elif mint_type == MintType.JUICY:
                     is_minted = await self.mint_juicy_pack(nft_name, nft_contract)
+                elif mint_type == MintType.PASS:
+                    is_minted = await self.mint_onchain_summer_pass(nft_name, nft_contract)
             await self.claim_task(nft_name, challenge_id)
             if not is_minted:
                 await sleep(sleep_from, sleep_to, f'Sleep before next {"claim" if only_claim else "mint"}')

@@ -136,6 +136,9 @@ with open('data/abi/onchain_summer/introducing.json', 'r') as file:
 with open('data/abi/onchain_summer/domain.json', 'r') as file:
     BASENAME_ABI = json.load(file)
 
+with open('data/abi/onchain_summer/pass.json', 'r') as file:
+    PASS_ABI = json.load(file)
+
 NFTS2ME_CONTRACTS_PATH = 'data/nfts2me_contracts.json'
 
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
