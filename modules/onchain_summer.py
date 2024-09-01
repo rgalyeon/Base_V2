@@ -30,7 +30,7 @@ class MintType(Enum):
 
 
 class OnchainSummer(Account):
-    def __init__(self, wallet_info, ref_code="") -> None:
+    def __init__(self, wallet_info) -> None:
         super().__init__(wallet_info=wallet_info, chain="base")
 
         ua = UserAgent().getRandom
@@ -134,8 +134,6 @@ class OnchainSummer(Account):
             ('TX100Badge', '9'),
             # ('TX1000Badge', '10')
         ]
-
-        self.ref_code = ref_code
 
     @retry
     @check_gas
@@ -256,7 +254,6 @@ class OnchainSummer(Account):
                     raise ValueError('Error on claim')
 
     async def claim_all_badges(self, sleep_from, sleep_to, random_badge):
-        await self.login(self.ref_code)
         badges = self.badges.copy()
 
         if random_badge:
@@ -530,8 +527,7 @@ class OnchainSummer(Account):
             return True
         return False
 
-    async def mint_all_nft(self, sleep_from, sleep_to, random_mint, nfts_for_mint, ref_code, only_claim):
-        await self.login(self.ref_code)
+    async def mint_all_nft(self, sleep_from, sleep_to, random_mint, nfts_for_mint, only_claim):
         nfts = self.os_nfts2.copy()
 
         nfts = [nft for nft in nfts if nft[0] in set(nfts_for_mint)]
@@ -583,8 +579,6 @@ class OnchainSummer(Account):
     async def spin_the_wheel(self):
         logger.info(f"[{self.account_id}][{self.address}] Start spin the wheel")
 
-        await self.login(self.ref_code)
-
         is_available = await self.check_available_spin()
         if is_available:
             data = {
@@ -628,7 +622,7 @@ class OnchainSummer(Account):
         else:
             logger.info(f"[{self.account_id}][{self.address}] Already minted")
 
-    async def login(self, ref_code=""):
+    async def register_account(self, ref_code=""):
         url = 'https://basehunt.xyz/api/profile/opt-in'
         data = {
             'gameId': 2,
@@ -641,7 +635,7 @@ class OnchainSummer(Account):
                 if response.status in (200, 201):
                     response_data = await response.json()
                     if response_data['success'] is True:
-                        logger.success(f"[{self.account_id}][{self.address}] Successfully login")
+                        logger.success(f"[{self.account_id}][{self.address}] Successfully registered")
                     else:
                         logger.error(
                             f"[{self.account_id}][{self.address}] Bad response: {await response.text()}")
@@ -727,7 +721,6 @@ class OnchainSummer(Account):
         return False
 
     async def register_domain(self, sleep_from, sleep_to, only_claim=False):
-        await self.login(self.ref_code)
         if not only_claim:
             await self.discount_register_domain()
             await sleep(sleep_from, sleep_to, 'Sleep berofe claim')

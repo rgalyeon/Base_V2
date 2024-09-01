@@ -71,6 +71,7 @@ def get_module():
             Choice(f"{next(counter)}) Mint unlooped", unlooped_mint),
             Choice(f"{next(counter)}) Mint EIP-4844 nft", mint_eip4844),
             Choice(f"{next(counter)}) Mint on Sound.xyz\n", sound_xyz_mint),
+            Choice(f"{next(counter)}) Register account Onchain Summer", register_onchain_summer),
             Choice(f"{next(counter)}) Mint Onchain Summer2 NFTs", mint_onchain_summer2_nfts),
             Choice(f"{next(counter)}) Claim Onchain Summer2 badges", claim_all_badges),
             Choice(f"{next(counter)}) Mint Base domain", mint_base_domain),
