@@ -124,16 +124,16 @@ class OnchainSummer(Account):
         ]
 
         self.badges = [
-            # ('StandWithCryptoBadge', '1'),
-            # ('CoinbaseOneBadge', '2'),
+            ('StandWithCryptoBadge', '1'),
+            ('CoinbaseOneBadge', '2'),
             ('BuildathonBadge', '3'),
-            # ('CollectorBadge', '4'),
-            # ('TraderBadge', '5'),
-            # ('SaverBadge', '6'),
+            ('CollectorBadge', '4'),
+            ('TraderBadge', '5'),
+            ('SaverBadge', '6'),
             ('TX10Badge', '7'),
             ('TX50Badge', '8'),
             ('TX100Badge', '9'),
-            # ('TX1000Badge', '10')
+            ('TX1000Badge', '10')
         ]
 
     @retry
