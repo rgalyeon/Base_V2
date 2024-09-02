@@ -27,6 +27,7 @@ class MintType(Enum):
     STIX = 5
     JUICY = 6
     PASS = 7
+    POSTCARDS = 8
 
 
 class OnchainSummer(Account):
@@ -118,8 +119,8 @@ class OnchainSummer(Account):
             ('The Eternal Skywheel', '0xD3d124B6A9497B3695918cEEB0e9c4D9ED6972fB', '72gJnCAkt9WBaWzfZolzGU', MintType.COMMENT),
             ('New Way', '0x674efEb35E7a753a9F015d970B8b580bD509FfCA', '3JKhK2C1b3rzuIqYUiavJN', MintType.COMMENT),
             ('Nouns and community', '0x227a42Cdbf9Dd3FeB18573d64Da013f8EB203107', '2HJXu4iu79GaVKPxH7xghW', MintType.COMMENT),
-            ('Truworld Onchain Summer Pass', '0xf2b0F524e754217905f043A0759d594DA892A59e', 'ocsChallenge_b00cf94a-51aa-4359-abf7-2cada197d0ca', MintType.PASS)
-
+            ('Truworld Onchain Summer Pass', '0xf2b0F524e754217905f043A0759d594DA892A59e', 'ocsChallenge_b00cf94a-51aa-4359-abf7-2cada197d0ca', MintType.PASS),
+            ('Onchain Summer Postcards', '0x1e08B2Ac393a5758fD74e8dE11D4DC64D94f0E07', 'ocsChallenge_832a7b42-a07d-459c-b08c-954df0269258', MintType.POSTCARDS)
         ]
 
         self.badges = [
@@ -527,6 +528,30 @@ class OnchainSummer(Account):
             return True
         return False
 
+    @retry
+    @check_gas
+    async def mint_rarible(self, nft_name, nft_contract):
+        logger.info(f"[{self.account_id}][{self.address}] Mint {nft_name} nft")
+
+        contract = self.get_contract(nft_contract, PASS_ABI)
+        n_nfts = await contract.functions.balanceOf(self.address, 0).call()
+        mint_price = 0.00077
+        if n_nfts < 1:
+            tx_data = await self.get_tx_data(self.w3.to_wei(mint_price, "ether"))
+
+            transaction = await contract.functions.buy(
+                0,
+                1
+            ).build_transaction(tx_data)
+
+            signed_txn = await self.sign(transaction)
+            txn_hash = await self.send_raw_transaction(signed_txn)
+            await self.wait_until_tx_finished(txn_hash.hex())
+        else:
+            logger.info(f"[{self.account_id}][{self.address}] Already minted")
+            return True
+        return False
+
     async def mint_all_nft(self, sleep_from, sleep_to, random_mint, nfts_for_mint, only_claim):
         nfts = self.os_nfts2.copy()
 
@@ -553,6 +578,8 @@ class OnchainSummer(Account):
                     is_minted = await self.mint_juicy_pack(nft_name, nft_contract)
                 elif mint_type == MintType.PASS:
                     is_minted = await self.mint_onchain_summer_pass(nft_name, nft_contract)
+                elif mint_type == MintType.POSTCARDS:
+                    is_minted = await self.mint_rarible(nft_name, nft_contract)
             await self.claim_task(nft_name, challenge_id)
             if not is_minted:
                 await sleep(sleep_from, sleep_to, f'Sleep before next {"claim" if only_claim else "mint"}')

@@ -939,7 +939,8 @@ async def mint_onchain_summer2_nfts(wallet_info):
         'The Eternal Skywheel',
         'New Way',
         'Nouns and community',
-        'Truworld Onchain Summer Pass'
+        'Truworld Onchain Summer Pass',
+        'Onchain Summer Postcards'
     ]
 
     only_claim = False
