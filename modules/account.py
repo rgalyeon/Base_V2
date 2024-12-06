@@ -140,7 +140,7 @@ class Account:
 
             await sleep(5, 20, message=f"[{self.account_id}][{self.address}] Sleep after approve")
 
-    async def wait_until_tx_finished(self, hash: str, max_wait_time=180) -> None:
+    async def wait_until_tx_finished(self, hash: str, max_wait_time=60) -> None:
         start_time = time.time()
         while True:
             try:

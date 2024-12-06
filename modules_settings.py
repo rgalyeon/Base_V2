@@ -1049,8 +1049,7 @@ async def custom_routes(wallet_info):
     """
 
     use_modules = [
-        mint_onchain_summer2_nfts,
-        mint_base_domain
+        [send_mail, mint_nft, mint_onchain_vision_nfts]
     ]
 
     sleep_from = 60
@@ -1080,11 +1079,11 @@ async def automatic_routes(wallet_info):
     transaction_count = 25
     cheap_ratio = 1.0
 
-    sleep_from = 30
-    sleep_to = 60
+    sleep_from = 50
+    sleep_to = 100
 
     use_none = True
-    cheap_modules = [send_mail, create_safe, mint_zkstars, mint_nft]
+    cheap_modules = [send_mail, mint_nft, mint_onchain_vision_nfts, vote_rubyscore, owtlo_checkin]
     expensive_modules = [swap_multiswap, deposit_aave, deposit_moonwell, create_portfolio, mint_zerius]
 
     routes_inst = Routes(wallet_info)
@@ -1176,10 +1175,18 @@ async def mint_base_era_nft(wallet_info):
     nft = BaseEra(wallet_info)
     await nft.mint()
 
+async def mint_onchain_vision_nfts(wallet_info):
+    ov_inst = OnchainVision(wallet_info)
+    await ov_inst.mint()
+
 
 async def spin_the_wheel(wallet_info):
     os_inst = OnchainSummer(wallet_info)
     await os_inst.spin_the_wheel()
+
+async def owtlo_checkin(wallet_info):
+    owlto_inst = Owlto(wallet_info)
+    await owlto_inst.check_in()
 
 
 def get_tx_count():

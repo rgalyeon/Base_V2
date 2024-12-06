@@ -139,6 +139,15 @@ with open('data/abi/onchain_summer/domain.json', 'r') as file:
 with open('data/abi/onchain_summer/pass.json', 'r') as file:
     PASS_ABI = json.load(file)
 
+with open('data/abi/onchainvision/abi.json', 'r') as file:
+    ONCHAIN_VISION_ABI = json.load(file)
+
+with open('data/abi/onchainvision/abi1.json', 'r') as file:
+    ONCHAIN_VISION_ABI1 = json.load(file)
+
+with open("data/abi/owlto/abi.json", "r") as file:
+    OWLTO_CHECKIN_ABI = json.load(file)
+
 NFTS2ME_CONTRACTS_PATH = 'data/nfts2me_contracts.json'
 
 ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
@@ -247,6 +256,8 @@ EIP_4844_CONTRACT = "0x273cA93A52b817294830eD7572aA591Ccfa647fd"
 ONCHAIN_SUMMER_CONTRACT = "0x768E7151500bB5120983d9619374F31DD71D8357"
 
 SOUND_XYZ_CONTRACT = "0x000000000001a36777f9930aaeff623771b13e70"
+
+OWLTO_CHECKIN_CONTRACT = "0x26637c9fDbD5Ecdd76a9E21Db7ea533e1B0713b6"
 
 
 #################################################################

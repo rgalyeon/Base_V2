@@ -76,6 +76,8 @@ def get_module():
             Choice(f"{next(counter)}) Claim Onchain Summer2 badges", claim_all_badges),
             Choice(f"{next(counter)}) Mint Base domain", mint_base_domain),
             Choice(f"{next(counter)}) Spin the wheel (Onchain Summer)\n", spin_the_wheel),
+            Choice(f"{next(counter)}) Owlto check-in", owtlo_checkin),
+            Choice(f"{next(counter)}) Mint onchain vision nfts\n", mint_onchain_vision_nfts),
             Choice(f"{next(counter)}) Use custom routes", custom_routes),
             Choice(f"{next(counter)}) Use automatic routes", automatic_routes),
             Choice(f"{next(counter)}) Progress checker", progress_check),
@@ -143,6 +145,10 @@ def main(module):
 if __name__ == '__main__':
     print(HEADER)
     print("Author – https://t.me/block_nine\n")
+
+    if sys.platform.startswith("win"):
+        # for windows
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
     if SAVE_LOGS:
         logger.add('logs.txt', filter=filter_out_utils)
